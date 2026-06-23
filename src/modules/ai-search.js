@@ -11,8 +11,14 @@ export function initAISearch() {
     const grid = document.getElementById('products');
     if (!grid) return;
 
-    // Show loading state
-    grid.classList.add('loading');
+    // Show beautiful loading state inside grid
+    grid.innerHTML = `
+      <div class="ai-loading-state">
+        <div class="ai-sparkle-spinner"></div>
+        <h3>AI is analyzing the catalog...</h3>
+        <p>Finding the perfect matches for "${query}"</p>
+      </div>
+    `;
     
     // Remove existing AI banner if any
     document.getElementById('ai-search-banner')?.remove();
@@ -24,10 +30,10 @@ export function initAISearch() {
         body: JSON.stringify({ query }),
       });
       const data = await res.json();
-      grid.classList.remove('loading');
 
       if (data.error) {
         console.error('AI Search error:', data.error);
+        grid.innerHTML = `<div class="products-empty">⚠️ ${data.error}</div>`;
         return;
       }
 
@@ -79,11 +85,11 @@ export function initAISearch() {
           // Insert the reason text below name
           if (p.ai_reason) {
             const reasonEl = document.createElement('div');
-            reasonEl.style.fontSize = '0.75rem';
-            reasonEl.style.color = 'var(--accent)';
-            reasonEl.style.marginTop = '4px';
-            reasonEl.style.lineHeight = '1.4';
-            reasonEl.textContent = p.ai_reason;
+            reasonEl.className = 'ai-reason-text';
+            reasonEl.innerHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+              <span>${p.ai_reason}</span>
+            `;
             card.querySelector('.product-name')?.after(reasonEl);
           }
           grid.appendChild(card);
@@ -96,7 +102,7 @@ export function initAISearch() {
       grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     } catch (e) {
-      grid.classList.remove('loading');
+      grid.innerHTML = '<div class="products-empty">⚠️ Failed to connect to AI Search.</div>';
       console.error('Failed to connect to AI Search', e);
     }
   };

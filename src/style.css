@@ -1481,6 +1481,29 @@ textarea.form-input { min-height: 80px; resize: vertical; font-family: inherit; 
 }
 .ai-mode-btn.active svg { color: var(--accent); }
 
+/* AI Loading State */
+.ai-loading-state {
+  grid-column: 1 / -1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 60px 20px;
+  text-align: center; color: var(--text-secondary);
+}
+.ai-sparkle-spinner {
+  width: 40px; height: 40px; margin-bottom: 20px;
+  border-radius: 50%; border: 2px solid rgba(201, 169, 110, 0.2);
+  border-top-color: var(--accent);
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* AI Reason Text inside Product Card */
+.ai-reason-text {
+  font-size: 0.75rem; color: var(--accent); margin-top: 8px; margin-bottom: 8px;
+  line-height: 1.4; padding: 8px 10px; background: rgba(201,169,110,0.08);
+  border-radius: var(--radius-sm); border: 1px solid rgba(201,169,110,0.2);
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.ai-reason-text svg { flex-shrink: 0; margin-top: 1px; }
+
 .nav-search-send {
   width: 34px; height: 34px; flex-shrink: 0;
   background: var(--accent); color: var(--bg-primary);
