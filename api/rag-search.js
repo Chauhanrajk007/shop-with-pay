@@ -1,65 +1,77 @@
-import { getDB } from "./_db.js"
+﻿import { getDB } from "./_db.js"
 
-// Correct Gemini API model names (June 2025):
-// Embedding: text-embedding-004
-// LLM:       gemini-1.5-flash  (gemini-2.0-flash also works if available in your region)
+// AI search using ONLY Gemini chat + MongoDB text search
+// NO embeddings needed â€” works with any Gemini API key
 
-async function getEmbedding(query) {
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent?key=${process.env.GEMINI_API_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "models/embedding-001",
-        content: { parts: [{ text: query }] },
-      }),
-    }
-  )
-  const data = await res.json()
-  if (!data.embedding?.values) {
-    const msg = data.error?.message || "Unknown embedding error"
-    console.error("Embedding failed:", msg, JSON.stringify(data))
-    throw new Error("Embedding failed: " + msg)
-  }
-  return data.embedding.values
+async function textSearch(db, query) {
+  // Smart keyword extraction â€” search across name, description, category, brand
+  const words = query.toLowerCase().replace(/[â‚¹<>]/g, "").split(/\s+/).filter(w => w.length > 2)
+  const orClauses = words.flatMap(w => [
+    { name: { $regex: w, $options: "i" } },
+    { description: { $regex: w, $options: "i" } },
+    { category: { $regex: w, $options: "i" } },
+    { brand: { $regex: w, $options: "i" } },
+  ])
+
+  // Also try the full query as a phrase
+  orClauses.push({ name: { $regex: query, $options: "i" } })
+  orClauses.push({ description: { $regex: query, $options: "i" } })
+
+  const results = await db.collection("products")
+    .find({ $or: orClauses }, { projection: { embedding: 0 } })
+    .limit(20)
+    .toArray()
+
+  return results
 }
 
-async function getLLMReasoning(query, candidates) {
+async function askGemini(query, candidates) {
+  if (!process.env.GEMINI_API_KEY) return null
+
+  const productList = candidates.slice(0, 12).map(p => ({
+    name: p.name,
+    description: p.description,
+    category: p.category,
+    brand: p.brand,
+    price: p.price,
+  }))
+
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{
           parts: [{
-            text: `You are a helpful shopping assistant for ShopWithPay.
+            text: `You are a helpful shopping assistant for LuxCart, an Indian e-commerce store.
 
 User query: "${query}"
 
-Below are products from our store. Select ONLY the most relevant ones (max 6).
-For EACH selected product, add a "reason" field (1-2 sentences) explaining why it matches the query.
-Also provide a brief "reasoning" summary (2-3 sentences) of your overall recommendations.
+Products available:
+${JSON.stringify(productList)}
 
-Products:
-${JSON.stringify(candidates.map(p => ({ name: p.name, description: p.description, category: p.category, brand: p.brand, price: p.price })))}
+Pick the best matching products (up to 6). For each, add a "reason" field (one sentence) explaining why it matches.
+Also write a short "reasoning" summary (1-2 sentences).
 
-Return ONLY valid JSON — no markdown:
-{
-  "products": [...selected products with reason field added...],
-  "reasoning": "Overall summary..."
-}`,
+Return ONLY valid JSON, no markdown:
+{"products": [...with reason field...], "reasoning": "..."}`,
           }],
         }],
-        generationConfig: { temperature: 0.2 },
+        generationConfig: { temperature: 0.2, maxOutputTokens: 1024 },
       }),
     }
   )
+
+  if (!res.ok) return null
   const data = await res.json()
-  let text = data.candidates?.[0]?.content?.parts?.[0]?.text || "{}"
+  let text = data.candidates?.[0]?.content?.parts?.[0]?.text || ""
   text = text.replace(/```json|```/g, "").trim()
-  return JSON.parse(text)
+  try {
+    return JSON.parse(text)
+  } catch {
+    return null
+  }
 }
 
 export default async function handler(req, res) {
@@ -68,79 +80,50 @@ export default async function handler(req, res) {
     if (typeof body === "string") body = JSON.parse(body)
 
     const query = body?.query
-    if (!query) return res.status(400).json({ error: "Query is missing" })
+    if (!query) return res.status(400).json({ error: "Query is required" })
 
-    /* STEP 1 — Get embedding for the user query */
-    let queryVector
-    try {
-      queryVector = await getEmbedding(query)
-    } catch (e) {
-      return res.status(500).json({ error: e.message })
-    }
-
-    /* STEP 2 — Vector search in MongoDB Atlas */
     const db = await getDB()
-    let candidates = []
-    try {
-      candidates = await db.collection("products").aggregate([
-        {
-          $vectorSearch: {
-            index: "product_vector",
-            path: "embedding",
-            queryVector,
-            numCandidates: 200,
-            limit: 15,
-          },
-        },
-        { $project: { embedding: 0 } },
-      ]).toArray()
-    } catch (e) {
-      // Vector search index may not exist yet — fall back to text search
-      console.warn("Vector search failed, falling back to text search:", e.message)
-      candidates = await db.collection("products")
-        .find(
-          { $or: [
-            { name: { $regex: query, $options: "i" } },
-            { description: { $regex: query, $options: "i" } },
-            { category: { $regex: query, $options: "i" } },
-          ]},
-          { projection: { embedding: 0 } }
-        )
-        .limit(15)
-        .toArray()
-    }
+
+    // Step 1: Text search in MongoDB
+    const candidates = await textSearch(db, query)
 
     if (candidates.length === 0) {
-      return res.json({ query, products: [], reasoning: "No products found matching your query. Try different keywords!" })
+      return res.json({
+        query,
+        products: [],
+        reasoning: "No products found for your query. Try different keywords!",
+      })
     }
 
-    /* STEP 3 — Gemini LLM to filter + add reasoning */
-    let result = { products: [], reasoning: "" }
+    // Step 2: Ask Gemini to pick best matches + add reasoning
+    let result = null
     try {
-      result = await getLLMReasoning(query, candidates)
+      result = await askGemini(query, candidates)
     } catch (e) {
-      console.warn("LLM reasoning failed, using raw candidates:", e.message)
-      result = {
-        products: candidates.slice(0, 6).map(p => ({ ...p, reason: "This product matches your search." })),
-        reasoning: "Here are the most relevant products from our catalog.",
-      }
+      console.warn("Gemini failed, using raw results:", e.message)
     }
 
-    if (!Array.isArray(result.products) || result.products.length === 0) {
-      result.products = candidates.slice(0, 6).map(p => ({ ...p, reason: "Highly relevant to your query." }))
-      result.reasoning = result.reasoning || "Here are the top matching products."
+    if (!result || !Array.isArray(result.products) || result.products.length === 0) {
+      // Fallback: just return top candidates without AI reasoning
+      const candidateMap = Object.fromEntries(candidates.map(p => [p.name, p]))
+      return res.json({
+        query,
+        products: candidates.slice(0, 6).map(p => ({ ...p, reason: "Matches your search." })),
+        reasoning: `Found ${candidates.length} products matching your query.`,
+      })
     }
 
-    // Merge back full product data (price, image, _id) from candidates
+    // Merge full product data (image, _id, price) back
     const candidateMap = Object.fromEntries(candidates.map(p => [p.name, p]))
     result.products = result.products.map(p => ({
       ...(candidateMap[p.name] || {}),
       ...p,
     }))
 
-    res.json({ query, products: result.products, reasoning: result.reasoning })
+    return res.json({ query, products: result.products, reasoning: result.reasoning })
   } catch (err) {
-    console.error("rag-search.js error:", err)
+    console.error("rag-search error:", err)
     res.status(500).json({ error: err.message })
   }
 }
+

@@ -3,23 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShopWithPay — AI-Powered Smart Shopping</title>
-  <meta name="description" content="Discover the best tech products with AI-powered search. Smart recommendations, secure Razorpay payments, and premium shopping experience." />
-  <meta name="keywords" content="AI shopping, smart recommendations, tech products, online store, Razorpay" />
+  <title>LuxCart — AI-Powered Smart Shopping</title>
+  <meta name="description" content="Shop premium tech products with AI assistance. Secure Razorpay payments, smart search, and the best deals in India." />
+  <meta name="keywords" content="AI shopping, tech products, online store, Razorpay, India" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body>
-  <!-- Cursor Glow -->
-  <div id="cursor-glow" class="cursor-glow"></div>
 
   <!-- Preloader -->
   <div id="preloader" class="preloader">
     <div class="preloader-inner">
-      <div class="preloader-logo">SHOPWITHPAY</div>
+      <div class="preloader-logo">◆ LUXCART</div>
       <div class="preloader-bar"><div class="preloader-bar-fill"></div></div>
     </div>
   </div>
@@ -29,30 +27,23 @@
     <div class="nav-container">
       <a href="#" class="nav-logo" id="nav-logo">
         <span class="logo-icon">◆</span>
-        <span class="logo-text">SHOPWITHPAY</span>
+        <span class="logo-text">LuxCart</span>
       </a>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="#home" class="nav-link active" data-section="home">Home</a></li>
-        <li><a href="#collections" class="nav-link" data-section="collections">Collections</a></li>
-        <li><a href="#trending" class="nav-link" data-section="trending">Trending</a></li>
-        <li><a href="#new-arrivals" class="nav-link" data-section="new-arrivals">New Arrivals</a></li>
-        <li><a href="#about" class="nav-link" data-section="about">About</a></li>
-      </ul>
+
+      <!-- Search Bar -->
+      <div class="nav-search-wrap">
+        <svg class="nav-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="main-search-input" class="nav-search-input" placeholder="Search products..." autocomplete="off" />
+        <button class="nav-search-clear" id="search-clear-btn" style="display:none;">✕</button>
+      </div>
+
       <div class="nav-actions">
-        <!-- Search button now opens AI panel directly -->
-        <button class="nav-action-btn ai-trigger" id="search-btn" aria-label="Ask AI">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        </button>
-        <button class="nav-action-btn" id="wishlist-btn" aria-label="Wishlist">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-          <span class="badge" id="wishlist-count">0</span>
-        </button>
         <button class="nav-action-btn" id="cart-btn" aria-label="Shopping Cart">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
           <span class="badge" id="cart-count">0</span>
         </button>
         <button class="nav-action-btn hidden" id="user-btn" aria-label="User Menu">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </button>
         <button class="nav-action-btn nav-login-btn" id="login-nav-btn" aria-label="Login">
           <span>Login</span>
@@ -61,17 +52,14 @@
           <span></span><span></span><span></span>
         </button>
       </div>
+
       <!-- User Dropdown -->
       <div class="user-dropdown" id="user-dropdown">
         <div class="user-dropdown-name" id="user-dropdown-name">User</div>
         <div class="user-dropdown-divider"></div>
         <button class="user-dropdown-item" id="orders-nav-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
           My Orders
-        </button>
-        <button class="user-dropdown-item" id="admin-nav-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-          Admin Panel
         </button>
         <div class="user-dropdown-divider"></div>
         <button class="user-dropdown-item logout" id="logout-btn">
@@ -82,24 +70,13 @@
     </div>
   </nav>
 
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobile-menu">
-    <ul class="mobile-nav-links">
-      <li><a href="#home" class="mobile-nav-link" data-section="home">Home</a></li>
-      <li><a href="#collections" class="mobile-nav-link" data-section="collections">Collections</a></li>
-      <li><a href="#trending" class="mobile-nav-link" data-section="trending">Trending</a></li>
-      <li><a href="#new-arrivals" class="mobile-nav-link" data-section="new-arrivals">New Arrivals</a></li>
-      <li><a href="#about" class="mobile-nav-link" data-section="about">About</a></li>
-    </ul>
-  </div>
-
   <!-- Auth Overlay -->
   <div class="auth-overlay" id="auth-overlay">
     <div class="auth-modal" id="auth-modal">
       <button class="auth-close" id="auth-close" aria-label="Close Auth">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
-      <div class="auth-logo">◆ SHOPWITHPAY</div>
+      <div class="auth-logo">◆ LUXCART</div>
       <h2 class="auth-title" id="auth-title">Login</h2>
       <div class="auth-form">
         <div class="auth-field" id="auth-name-field" style="display:none">
@@ -127,277 +104,58 @@
     </div>
   </div>
 
-  <!-- Search overlay removed — search icon now opens AI panel directly -->
-
-  <!-- AI Assistant Panel -->
-  <div class="ai-panel" id="ai-panel">
-    <div class="ai-panel-header">
-      <div class="ai-panel-title">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 3v2m0 14v2m-7-9H3m18 0h-2M5.6 5.6l1.4 1.4m9.9 9.9l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>
-        <span>AI Shopping Assistant</span>
-      </div>
-      <button class="ai-panel-close-btn" id="ai-panel-close" aria-label="Close AI Panel">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
-    </div>
-    <div class="ai-panel-body">
-      <div class="ai-greeting" id="ai-greeting">
-        <div class="ai-greeting-icon">✦</div>
-        <h3>How can I help you shop?</h3>
-        <p>Describe what you need in natural language and I'll find the perfect products.</p>
-        <div class="ai-suggestions">
-          <button class="ai-suggestion" data-query="gaming mouse under ₹2000">🎮 Gaming mouse under ₹2000</button>
-          <button class="ai-suggestion" data-query="wireless headphones with noise cancellation">🎧 Wireless ANC headphones</button>
-          <button class="ai-suggestion" data-query="portable SSD for backups">💾 Portable SSD for backups</button>
-        </div>
-      </div>
-      <div class="ai-results" id="ai-results"></div>
-      <div class="ai-loading" id="ai-loading" style="display:none">
-        <div class="ai-dot"></div>
-        <div class="ai-dot"></div>
-        <div class="ai-dot"></div>
-      </div>
-    </div>
-    <div class="ai-input-area">
-      <button class="ai-voice-btn" id="ai-voice-btn" aria-label="Voice Input">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-      </button>
-      <input type="text" id="ai-input" placeholder="Need a laptop under ₹60k for coding..." autocomplete="off" />
-      <button class="ai-send-btn" id="ai-send-btn" aria-label="Send">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="m22 2-11 11"/></svg>
-      </button>
-    </div>
-  </div>
-
   <main>
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section id="home" class="hero">
       <div class="hero-bg">
         <div class="hero-gradient"></div>
-        <div class="hero-particles" id="hero-particles"></div>
-        <div class="hero-grid-overlay"></div>
       </div>
       <div class="hero-content">
-        <div class="hero-badge reveal-up">
+        <div class="hero-badge">
           <span class="badge-dot"></span>
-          AI-Powered Shopping 2026
+          AI-Powered Shopping
         </div>
         <h1 class="hero-title">
-          <span class="hero-line reveal-up" style="--delay: 0.1s">Shop Smarter</span>
-          <span class="hero-line hero-line-accent reveal-up" style="--delay: 0.2s">With AI</span>
-          <span class="hero-line reveal-up" style="--delay: 0.3s">Assistance</span>
+          Find Exactly<br/>
+          <span class="hero-accent">What You Need</span>
         </h1>
-        <p class="hero-subtitle reveal-up" style="--delay: 0.4s">
-          Discover products with our AI assistant. Just describe what you need —<br /> we'll find the perfect match with intelligent recommendations.
+        <p class="hero-subtitle">
+          Search from thousands of premium tech products.<br/>
+          Ask our AI for recommendations in plain language.
         </p>
-        <div class="hero-cta reveal-up" style="--delay: 0.5s">
-          <a href="#trending" class="btn btn-primary" id="hero-about-btn">Browse Products</a>
+        <div class="hero-search-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="hero-search-input" class="hero-search-input" placeholder="Search headphones, laptops, keyboards..." autocomplete="off" />
+          <button class="hero-search-btn" id="hero-search-btn">Search</button>
         </div>
-        <div class="hero-stats reveal-up" style="--delay: 0.6s">
-          <div class="stat">
-            <span class="stat-number" data-target="2500">0</span><span class="stat-suffix">+</span>
-            <span class="stat-label">Products</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <span class="stat-number" data-target="150">0</span><span class="stat-suffix">+</span>
-            <span class="stat-label">Brands</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <span class="stat-number" data-target="50">0</span><span class="stat-suffix">K+</span>
-            <span class="stat-label">Happy Clients</span>
-          </div>
-        </div>
-      </div>
-      <div class="hero-visual reveal-scale" style="--delay: 0.3s">
-        <div class="hero-card hero-card-1">
-          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=500&fit=crop&q=80" alt="Premium Headphones" loading="eager" />
-        </div>
-        <div class="hero-card hero-card-2">
-          <img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300&h=400&fit=crop&q=80" alt="Gaming Mouse" loading="eager" />
-        </div>
-        <div class="hero-card hero-card-3">
-          <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&h=350&fit=crop&q=80" alt="Mechanical Keyboard" loading="eager" />
-        </div>
-        <div class="hero-floating-tag tag-1">✦ AI Powered</div>
-        <div class="hero-floating-tag tag-2">🚀 Smart Deals</div>
-      </div>
-      <div class="hero-scroll-indicator">
-        <div class="scroll-line"></div>
-        <span>Scroll to explore</span>
       </div>
     </section>
 
-    <!-- Marquee Banner -->
-    <div class="marquee-section">
-      <div class="marquee-track">
-        <div class="marquee-content">
-          <span>★ FREE SHIPPING PAN INDIA</span>
-          <span>★ AI POWERED SEARCH</span>
-          <span>★ SECURE RAZORPAY PAYMENTS</span>
-          <span>★ 30-DAY RETURNS</span>
-          <span>★ PREMIUM QUALITY</span>
-          <span>★ EXCLUSIVE DEALS</span>
-          <span>★ FREE SHIPPING PAN INDIA</span>
-          <span>★ AI POWERED SEARCH</span>
-          <span>★ SECURE RAZORPAY PAYMENTS</span>
-          <span>★ 30-DAY RETURNS</span>
-          <span>★ PREMIUM QUALITY</span>
-          <span>★ EXCLUSIVE DEALS</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Collections -->
-    <section id="collections" class="section collections">
+    <!-- Products Section -->
+    <section id="products" class="section products-section">
       <div class="container">
-        <div class="section-header">
-          <span class="section-tag reveal-up">◆ Curated For You</span>
-          <h2 class="section-title reveal-up" style="--delay: 0.1s">Shop by <span class="accent">Collection</span></h2>
-          <p class="section-desc reveal-up" style="--delay: 0.2s">Explore our handpicked categories designed for every tech need</p>
-        </div>
-        <div class="collections-grid" id="collections-grid"></div>
-      </div>
-    </section>
-
-    <!-- Trending Products -->
-    <section id="trending" class="section products-section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag reveal-up">◆ Most Popular</span>
-          <h2 class="section-title reveal-up" style="--delay: 0.1s">Trending <span class="accent">Now</span></h2>
-          <p class="section-desc reveal-up" style="--delay: 0.2s">Discover what everyone is buying this season</p>
-        </div>
-        <div class="filter-bar reveal-up" style="--delay: 0.3s">
-          <button class="filter-btn active" data-filter="all" id="filter-all">All</button>
-          <button class="filter-btn" data-filter="gaming accessories" id="filter-gaming">Gaming</button>
-          <button class="filter-btn" data-filter="audio" id="filter-audio">Audio</button>
-          <button class="filter-btn" data-filter="wearables" id="filter-wearables">Wearables</button>
-          <button class="filter-btn" data-filter="storage" id="filter-storage">Storage</button>
+        <div class="products-toolbar">
+          <div class="toolbar-left">
+            <h2 class="toolbar-title" id="toolbar-title">All Products</h2>
+            <span class="toolbar-count" id="toolbar-count"></span>
+          </div>
+          <div class="toolbar-filters" id="filter-bar">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="audio">Audio</button>
+            <button class="filter-btn" data-filter="gaming accessories">Gaming</button>
+            <button class="filter-btn" data-filter="monitors">Monitors</button>
+            <button class="filter-btn" data-filter="storage">Storage</button>
+            <button class="filter-btn" data-filter="smartphones">Phones</button>
+            <button class="filter-btn" data-filter="laptops">Laptops</button>
+            <button class="filter-btn" data-filter="wearables">Wearables</button>
+          </div>
         </div>
         <div class="products-grid" id="products-grid"></div>
-      </div>
-    </section>
-
-    <!-- Promo Banner -->
-    <section class="promo-banner">
-      <div class="promo-bg">
-        <div class="promo-gradient"></div>
-      </div>
-      <div class="container promo-content">
-        <div class="promo-text">
-          <span class="promo-tag reveal-up">Limited Time Offer</span>
-          <h2 class="promo-title reveal-up" style="--delay: 0.1s">Up to <span class="accent">60% Off</span></h2>
-          <p class="promo-subtitle reveal-up" style="--delay: 0.2s">Mega Tech Sale — Don't miss out on our biggest deals of the season</p>
-          <a href="#trending" class="btn btn-primary reveal-up" style="--delay: 0.3s" id="promo-shop-btn">
-            <span>Shop the Sale</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-        </div>
-        <div class="promo-timer reveal-up" style="--delay: 0.4s">
-          <div class="timer-block">
-            <span class="timer-number" id="timer-days">12</span>
-            <span class="timer-label">Days</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-block">
-            <span class="timer-number" id="timer-hours">08</span>
-            <span class="timer-label">Hours</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-block">
-            <span class="timer-number" id="timer-mins">45</span>
-            <span class="timer-label">Mins</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-block">
-            <span class="timer-number" id="timer-secs">30</span>
-            <span class="timer-label">Secs</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- New Arrivals -->
-    <section id="new-arrivals" class="section new-arrivals-section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag reveal-up">◆ Just Landed</span>
-          <h2 class="section-title reveal-up" style="--delay: 0.1s">New <span class="accent">Arrivals</span></h2>
-          <p class="section-desc reveal-up" style="--delay: 0.2s">Fresh drops to upgrade your tech setup</p>
-        </div>
-        <div class="arrivals-carousel" id="arrivals-carousel">
-          <div class="carousel-track" id="carousel-track"></div>
-          <div class="carousel-controls">
-            <button class="carousel-btn carousel-prev" id="carousel-prev" aria-label="Previous">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-            </button>
-            <div class="carousel-dots" id="carousel-dots"></div>
-            <button class="carousel-btn carousel-next" id="carousel-next" aria-label="Next">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section class="section features-section">
-      <div class="container">
-        <div class="features-grid">
-          <div class="feature-card reveal-up" style="--delay: 0s">
-            <div class="feature-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v2m0 14v2m-7-9H3m18 0h-2M5.6 5.6l1.4 1.4m9.9 9.9l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>
-            </div>
-            <h3 class="feature-title">AI-Powered Search</h3>
-            <p class="feature-desc">Describe what you need in natural language — our AI finds the perfect products for you</p>
-          </div>
-          <div class="feature-card reveal-up" style="--delay: 0.1s">
-            <div class="feature-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
-            </div>
-            <h3 class="feature-title">Secure Razorpay</h3>
-            <p class="feature-desc">Industry-leading payment security with Razorpay. UPI, cards, wallets — all supported</p>
-          </div>
-          <div class="feature-card reveal-up" style="--delay: 0.2s">
-            <div class="feature-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            </div>
-            <h3 class="feature-title">Express Delivery</h3>
-            <p class="feature-desc">Lightning-fast shipping across India within 24-48 hours guaranteed</p>
-          </div>
-          <div class="feature-card reveal-up" style="--delay: 0.3s">
-            <div class="feature-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
-            </div>
-            <h3 class="feature-title">Easy Returns</h3>
-            <p class="feature-desc">30-day hassle-free returns. No questions asked, full refund guaranteed</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Newsletter -->
-    <section id="about" class="section newsletter-section">
-      <div class="container">
-        <div class="newsletter-card">
-          <div class="newsletter-glow"></div>
-          <div class="newsletter-content">
-            <span class="section-tag reveal-up">◆ Stay Connected</span>
-            <h2 class="newsletter-title reveal-up" style="--delay: 0.1s">Join the <span class="accent">ShopWithPay</span> Club</h2>
-            <p class="newsletter-desc reveal-up" style="--delay: 0.2s">Get exclusive access to deals, new drops, and AI-powered shopping tips. Be the first to know.</p>
-            <form class="newsletter-form reveal-up" style="--delay: 0.3s" id="newsletter-form">
-              <div class="newsletter-input-wrap">
-                <input type="email" placeholder="Enter your email address" class="newsletter-input" id="newsletter-email" required />
-                <button type="submit" class="btn btn-primary newsletter-submit" id="newsletter-submit">
-                  <span>Subscribe</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                </button>
-              </div>
-              <p class="newsletter-disclaimer">No spam ever. Unsubscribe anytime.</p>
-            </form>
-          </div>
+        <div id="products-empty" class="products-empty" style="display:none">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <p>No products found</p>
+          <span>Try a different search or filter</span>
+          <button class="btn btn-outline" id="clear-search-btn" style="margin-top:1rem">Clear Search</button>
         </div>
       </div>
     </section>
@@ -406,60 +164,13 @@
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="#" class="nav-logo">
-            <span class="logo-icon">◆</span>
-            <span class="logo-text">SHOPWITHPAY</span>
-          </a>
-          <p class="footer-tagline">AI-powered shopping platform. Discover the best tech products with intelligent recommendations and secure Razorpay payments.</p>
-          <div class="footer-socials">
-            <a href="#" class="social-link" aria-label="Instagram" id="social-instagram">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-            </a>
-            <a href="#" class="social-link" aria-label="Twitter" id="social-twitter">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-            </a>
-            <a href="#" class="social-link" aria-label="GitHub" id="social-github">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-            </a>
-          </div>
-        </div>
-        <div class="footer-col">
-          <h4 class="footer-heading">Shop</h4>
-          <ul class="footer-links">
-            <li><a href="#collections">All Collections</a></li>
-            <li><a href="#trending">Trending</a></li>
-            <li><a href="#new-arrivals">New Arrivals</a></li>
-            <li><a href="#">Deals</a></li>
-            <li><a href="#">Gift Cards</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4 class="footer-heading">Company</h4>
-          <ul class="footer-links">
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Partners</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4 class="footer-heading">Support</h4>
-          <ul class="footer-links">
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">Shipping Info</a></li>
-            <li><a href="#">Returns</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 ShopWithPay. All rights reserved.</p>
-        <div class="footer-bottom-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-        </div>
+      <div class="footer-simple">
+        <a href="#" class="nav-logo">
+          <span class="logo-icon">◆</span>
+          <span class="logo-text">LuxCart</span>
+        </a>
+        <p class="footer-tagline">AI-powered shopping. Secure payments via Razorpay.</p>
+        <p class="footer-copy">© 2026 LuxCart. All rights reserved.</p>
       </div>
     </div>
   </footer>
@@ -524,15 +235,6 @@
         <p class="modal-description" id="modal-product-description"></p>
         <div class="modal-price">
           <span class="modal-current-price" id="modal-product-price"></span>
-          <span class="modal-original-price" id="modal-product-original-price"></span>
-        </div>
-        <div class="modal-sizes" id="modal-sizes">
-          <span class="modal-label">Size:</span>
-          <div class="size-options" id="size-options"></div>
-        </div>
-        <div class="modal-colors" id="modal-colors">
-          <span class="modal-label">Color:</span>
-          <div class="color-options" id="color-options"></div>
         </div>
         <div class="modal-quantity">
           <span class="modal-label">Quantity:</span>
@@ -547,42 +249,9 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
             <span>Add to Cart</span>
           </button>
-          <button class="btn btn-outline btn-wishlist-modal" id="modal-wishlist">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-          </button>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Compare Bar -->
-  <div class="compare-bar" id="compare-bar" style="display:none">
-    <div class="compare-bar-info">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22V8"/><path d="m21 3-9 9"/><path d="M3 3l9 9"/></svg>
-      <span>Compare (<span id="compare-count">0</span> items)</span>
-    </div>
-    <div class="compare-bar-actions">
-      <button class="btn btn-outline compare-clear" id="compare-clear-btn">Clear</button>
-      <button class="btn btn-primary compare-now" id="compare-open-btn">
-        <span>Compare Now</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <!-- Compare Modal -->
-  <div class="modal-overlay" id="compare-overlay"></div>
-  <div class="compare-modal" id="compare-modal">
-    <div class="compare-header">
-      <h3>Product Comparison</h3>
-      <button class="modal-close" id="compare-close" aria-label="Close Compare">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
-    </div>
-    <div class="ai-loading" id="compare-loading" style="display:none">
-      <div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>
-    </div>
-    <div class="compare-body" id="compare-body"></div>
   </div>
 
   <!-- Orders Modal -->
@@ -607,73 +276,52 @@
     </div>
   </div>
 
-  <!-- Admin Modal -->
-  <div class="modal-overlay" id="admin-overlay"></div>
-  <div class="admin-modal" id="admin-modal">
-    <div class="admin-header">
-      <h3>Admin Panel</h3>
-      <div class="admin-header-actions">
-        <button class="btn btn-primary" id="admin-add-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-          <span>Add Product</span>
-        </button>
-        <button class="modal-close" id="admin-close" aria-label="Close Admin">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-        </button>
+  <!-- AI Floating Chat -->
+  <div class="ai-fab" id="ai-fab">
+    <div class="ai-fab-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v2m0 14v2m-7-9H3m18 0h-2M5.6 5.6l1.4 1.4m9.9 9.9l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>
+    </div>
+    <span class="ai-fab-label">Ask AI</span>
+  </div>
+
+  <!-- AI Chat Panel (bottom floating) -->
+  <div class="ai-chat-panel" id="ai-panel">
+    <div class="ai-chat-header">
+      <div class="ai-chat-title">
+        <div class="ai-chat-avatar">✦</div>
+        <div>
+          <span class="ai-chat-name">LuxCart AI</span>
+          <span class="ai-chat-status">Ask me anything about products</span>
+        </div>
+      </div>
+      <button class="ai-chat-close" id="ai-panel-close" aria-label="Close AI">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="ai-chat-messages" id="ai-results">
+      <div class="ai-welcome-msg">
+        <p>👋 Hi! I'm your AI shopping assistant.</p>
+        <p>Try asking me something like:</p>
+        <div class="ai-suggestions">
+          <button class="ai-suggestion" data-query="wireless headphones with noise cancellation under ₹15000">🎧 Wireless ANC headphones</button>
+          <button class="ai-suggestion" data-query="gaming mouse under ₹5000">🖱️ Gaming mouse under ₹5000</button>
+          <button class="ai-suggestion" data-query="best laptop for coding">💻 Best laptop for coding</button>
+          <button class="ai-suggestion" data-query="portable SSD for backup">💾 Portable SSD</button>
+        </div>
       </div>
     </div>
-    <div class="ai-loading" id="admin-loading" style="display:none">
+    <div class="ai-loading" id="ai-loading" style="display:none">
       <div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>
     </div>
-    <div class="admin-products" id="admin-products"></div>
-  </div>
-
-  <!-- Admin Form Modal -->
-  <div class="modal-overlay" id="admin-form-overlay"></div>
-  <div class="admin-form-modal" id="admin-form-modal">
-    <div class="admin-form-header">
-      <h3 id="admin-form-title">Add Product</h3>
-      <button class="modal-close" id="admin-form-close" aria-label="Close Form">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    <div class="ai-chat-input-area">
+      <input type="text" id="ai-input" class="ai-chat-input" placeholder="What are you looking for?" autocomplete="off" />
+      <button class="ai-chat-send" id="ai-send-btn" aria-label="Send">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="m22 2-11 11"/></svg>
       </button>
     </div>
-    <form id="admin-form" class="admin-form">
-      <div class="form-group">
-        <label class="form-label">Product Name</label>
-        <input class="form-input" id="admin-product-name" type="text" placeholder="e.g. Gaming Mouse" required />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Description</label>
-        <textarea class="form-input" id="admin-product-description" placeholder="Product description..." rows="3" required></textarea>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Category</label>
-          <input class="form-input" id="admin-product-category" type="text" placeholder="e.g. gaming accessories" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Brand</label>
-          <input class="form-input" id="admin-product-brand" type="text" placeholder="e.g. Logitech" required />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Price (₹)</label>
-          <input class="form-input" id="admin-product-price" type="number" placeholder="1500" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Image URL</label>
-          <input class="form-input" id="admin-product-image" type="url" placeholder="https://..." />
-        </div>
-      </div>
-      <button type="submit" class="btn btn-primary admin-form-submit" id="admin-form-submit">
-        <span>Save Product</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </button>
-    </form>
   </div>
 
-  <!-- Toast Container -->
+  <!-- Toast -->
   <div class="toast-container" id="toast-container"></div>
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

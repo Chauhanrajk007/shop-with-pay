@@ -1,4 +1,4 @@
-// Cart Module — ShopWithPay (with Razorpay checkout)
+﻿// Cart Module â€” ShopWithPay (with Razorpay checkout)
 import { showToast, formatPrice } from './ui.js';
 import { getToken, isLoggedIn, openAuth } from './auth.js';
 
@@ -70,7 +70,7 @@ export function updateCartUI() {
         <div class="cart-item-bottom">
           <span class="cart-item-price">${formatPrice(item.price * item.quantity)}</span>
           <div class="cart-item-qty">
-            <button data-action="minus" data-index="${index}" aria-label="Decrease quantity">−</button>
+            <button data-action="minus" data-index="${index}" aria-label="Decrease quantity">âˆ’</button>
             <span>${item.quantity}</span>
             <button data-action="plus" data-index="${index}" aria-label="Increase quantity">+</button>
           </div>
@@ -127,7 +127,7 @@ async function handleCheckout() {
       key: data.key,
       amount: data.order.amount,
       currency: 'INR',
-      name: 'ShopWithPay',
+      name: 'LuxCart',
       description: `Order - ${cartItems.length} items`,
       order_id: data.order.id,
       handler: async function (response) {
@@ -169,3 +169,4 @@ export function initCart() {
   document.getElementById('cart-overlay').addEventListener('click', closeCart);
   document.getElementById('checkout-btn').addEventListener('click', handleCheckout);
 }
+

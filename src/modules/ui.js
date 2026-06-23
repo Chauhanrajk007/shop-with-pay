@@ -1,4 +1,4 @@
-// UI Module — ShopWithPay
+﻿// UI Module â€” ShopWithPay
 import { products, newArrivals } from '../data/products.js';
 import { addToCart } from './cart.js';
 import { toggleCompare } from './compare.js';
@@ -6,7 +6,7 @@ import { toggleCompare } from './compare.js';
 let wishlist = new Set();
 
 export function formatPrice(price) {
-  return `₹${Number(price).toLocaleString('en-IN')}`;
+  return `â‚¹${Number(price).toLocaleString('en-IN')}`;
 }
 
 export function showToast(type, title, message) {
@@ -36,7 +36,7 @@ export function createProductCard(product) {
 
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
-  const stars = '★'.repeat(Math.floor(product.rating)) + (product.rating % 1 >= 0.5 ? '½' : '');
+  const stars = 'â˜…'.repeat(Math.floor(product.rating)) + (product.rating % 1 >= 0.5 ? 'Â½' : '');
   const isWished = wishlist.has(product.id);
 
   card.innerHTML = `
@@ -120,7 +120,7 @@ export function openProductModal(product) {
   if (product.originalPrice) { origEl.textContent = formatPrice(product.originalPrice); origEl.style.display = 'inline'; }
   else origEl.style.display = 'none';
 
-  const stars = '★'.repeat(Math.floor(product.rating)) + (product.rating % 1 >= 0.5 ? '½' : '');
+  const stars = 'â˜…'.repeat(Math.floor(product.rating)) + (product.rating % 1 >= 0.5 ? 'Â½' : '');
   document.getElementById('modal-product-rating').innerHTML = `<span class="stars">${stars}</span> <span>${product.rating}</span> <span class="count">(${product.reviews} reviews)</span>`;
 
   const sizeOptions = document.getElementById('size-options');
@@ -243,7 +243,8 @@ export function initUI() {
   document.getElementById('newsletter-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('newsletter-email').value;
-    if (email) { showToast('success', 'Subscribed!', 'Welcome to ShopWithPay club'); document.getElementById('newsletter-email').value = ''; }
+    if (email) { showToast('success', 'Subscribed!', 'Welcome to LuxCart club'); document.getElementById('newsletter-email').value = ''; }
   });
   initFilters(); initCarousel();
 }
+

@@ -1,5 +1,5 @@
 /* ============================================
-   ShopWithPay — Premium Dark Theme
+   LuxCart â€” Premium Dark Theme
    ============================================ */
 
 /* ============================================
@@ -27,9 +27,9 @@
   --success: #4ade80;
   --error: #f87171;
   --warning: #fbbf24;
-  --font-display: 'Playfair Display', Georgia, serif;
+  --font-display: 'Syne', 'Inter', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --nav-height: 80px;
+  --nav-height: 70px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -1436,4 +1436,275 @@ textarea.form-input { min-height: 80px; resize: vertical; font-family: inherit; 
   .compare-bar { flex-direction: column; gap: var(--space-sm); border-radius: var(--radius-xl); padding: var(--space-md); }
   .admin-form-modal { width: 95vw; }
   .form-row { grid-template-columns: 1fr; }
+}
+
+/* ============================================
+   Nav Search Bar
+   ============================================ */
+.nav-search-wrap {
+  display: flex; align-items: center; gap: 10px;
+  flex: 1; max-width: 400px; margin: 0 var(--space-xl);
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: var(--radius-full); padding: 0 var(--space-md);
+  transition: border-color var(--transition-fast);
+}
+.nav-search-wrap:focus-within { border-color: var(--accent); }
+.nav-search-icon { color: var(--text-tertiary); flex-shrink: 0; }
+.nav-search-input {
+  flex: 1; height: 40px; font-size: 0.9rem;
+  color: var(--text-primary); background: none;
+}
+.nav-search-input::placeholder { color: var(--text-tertiary); }
+.nav-search-clear {
+  color: var(--text-tertiary); width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+.nav-search-clear:hover { color: var(--text-primary); }
+
+/* ============================================
+   Hero — Clean Minimal
+   ============================================ */
+.hero {
+  min-height: 60vh; display: flex; align-items: center;
+  padding-top: calc(var(--nav-height) + 40px);
+  padding-bottom: 60px; position: relative; overflow: hidden;
+}
+.hero-bg { position: absolute; inset: 0; z-index: 0; }
+.hero-gradient {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(201,169,110,0.12) 0%, transparent 70%);
+}
+.hero-content {
+  position: relative; z-index: 1;
+  max-width: 1280px; margin: 0 auto; padding: 0 var(--space-xl);
+  text-align: center;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--accent);
+  background: var(--accent-glow); border: 1px solid var(--border-accent);
+  padding: 6px 16px; border-radius: var(--radius-full);
+  margin-bottom: 28px;
+}
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); animation: pulse 2s infinite;
+}
+.hero-title {
+  font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 800; line-height: 1.1; margin-bottom: 24px;
+  color: var(--text-primary); letter-spacing: -0.02em;
+}
+.hero-accent { color: var(--accent); }
+.hero-subtitle {
+  font-size: 1.05rem; color: var(--text-secondary); line-height: 1.7;
+  max-width: 520px; margin: 0 auto 40px;
+}
+.hero-search-wrap {
+  display: flex; align-items: center; gap: 12px;
+  max-width: 580px; margin: 0 auto;
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: var(--radius-full); padding: 8px 8px 8px 20px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.hero-search-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.hero-search-wrap svg { color: var(--text-tertiary); flex-shrink: 0; }
+.hero-search-input {
+  flex: 1; font-size: 1rem; color: var(--text-primary);
+  background: none;
+}
+.hero-search-input::placeholder { color: var(--text-tertiary); }
+.hero-search-btn {
+  background: var(--accent); color: var(--text-inverse);
+  font-size: 0.9rem; font-weight: 600;
+  padding: 10px 24px; border-radius: var(--radius-full);
+  transition: all var(--transition-fast); flex-shrink: 0;
+}
+.hero-search-btn:hover { background: var(--accent-light); transform: scale(1.02); }
+
+/* ============================================
+   Products Section
+   ============================================ */
+.products-section { padding: 60px 0; }
+.products-toolbar {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-wrap: wrap; gap: var(--space-lg); margin-bottom: var(--space-xl);
+}
+.toolbar-left { display: flex; align-items: baseline; gap: var(--space-sm); }
+.toolbar-title {
+  font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
+}
+.toolbar-count { font-size: 0.85rem; color: var(--text-tertiary); }
+.toolbar-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.products-empty {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 80px 0; text-align: center;
+  color: var(--text-tertiary); gap: 12px;
+}
+.products-empty p { font-size: 1.1rem; color: var(--text-secondary); }
+
+/* ============================================
+   Simplified Footer
+   ============================================ */
+.footer-simple {
+  text-align: center; padding: 48px 0;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  border-top: 1px solid var(--border);
+}
+.footer-tagline { font-size: 0.9rem; color: var(--text-tertiary); }
+.footer-copy { font-size: 0.8rem; color: var(--text-tertiary); }
+
+/* ============================================
+   Floating AI FAB
+   ============================================ */
+.ai-fab {
+  position: fixed; bottom: 28px; right: 28px; z-index: 4000;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--accent); color: var(--text-inverse);
+  padding: 14px 20px; border-radius: var(--radius-full);
+  cursor: pointer; box-shadow: 0 8px 32px rgba(201, 169, 110, 0.4);
+  transition: all var(--transition-fast);
+  font-weight: 600; font-size: 0.9rem;
+}
+.ai-fab:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 12px 40px rgba(201, 169, 110, 0.5); }
+.ai-fab.hidden { opacity: 0; pointer-events: none; transform: scale(0.8) translateY(20px); }
+.ai-fab-icon svg { width: 22px; height: 22px; }
+
+/* ============================================
+   AI Chat Panel (bottom floating)
+   ============================================ */
+.ai-chat-panel {
+  position: fixed; bottom: 24px; right: 24px; z-index: 5000;
+  width: 380px; max-width: calc(100vw - 48px);
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px var(--border);
+  display: flex; flex-direction: column;
+  transform: scale(0.9) translateY(20px); opacity: 0; pointer-events: none;
+  transition: all 0.3s var(--ease-out);
+  max-height: 70vh;
+}
+.ai-chat-panel.open {
+  transform: scale(1) translateY(0); opacity: 1; pointer-events: all;
+}
+.ai-chat-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.ai-chat-title { display: flex; align-items: center; gap: 12px; }
+.ai-chat-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--accent-glow); border: 1px solid var(--border-accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: var(--accent);
+}
+.ai-chat-name { display: block; font-weight: 600; font-size: 0.9rem; }
+.ai-chat-status { display: block; font-size: 0.72rem; color: var(--text-tertiary); }
+.ai-chat-close {
+  width: 32px; height: 32px; border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-tertiary); transition: all var(--transition-fast);
+}
+.ai-chat-close:hover { background: var(--bg-card); color: var(--text-primary); }
+
+.ai-chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 16px;
+  min-height: 200px;
+}
+.ai-welcome-msg { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+.ai-welcome-msg p { margin-bottom: 8px; }
+.ai-suggestions { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.ai-suggestion {
+  text-align: left; padding: 8px 12px; border-radius: var(--radius-md);
+  font-size: 0.82rem; color: var(--text-secondary);
+  background: var(--bg-card); border: 1px solid var(--border);
+  transition: all var(--transition-fast); cursor: pointer;
+}
+.ai-suggestion:hover { border-color: var(--accent); color: var(--accent); }
+
+.ai-message { display: flex; flex-direction: column; gap: 8px; }
+.ai-message-user {
+  align-items: flex-end;
+}
+.ai-message-user > span, .ai-message-user > div {
+  background: var(--accent); color: var(--text-inverse);
+  padding: 8px 14px; border-radius: 16px 16px 4px 16px;
+  font-size: 0.88rem; max-width: 85%;
+}
+.ai-message-ai > * {
+  max-width: 100%;
+}
+.ai-reasoning {
+  font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;
+  background: var(--bg-card); border: 1px solid var(--border);
+  padding: 10px 14px; border-radius: var(--radius-md); border-left: 3px solid var(--accent);
+}
+.ai-products-grid {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ai-product-card {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 10px;
+  transition: border-color var(--transition-fast);
+}
+.ai-product-card:hover { border-color: var(--accent); }
+.ai-product-card img {
+  width: 56px; height: 56px; object-fit: cover;
+  border-radius: var(--radius-sm); flex-shrink: 0;
+}
+.ai-product-info { display: flex; flex-direction: column; gap: 4px; }
+.ai-product-name { font-size: 0.85rem; font-weight: 600; line-height: 1.3; }
+.ai-product-price { font-size: 0.88rem; color: var(--accent); font-weight: 700; }
+.ai-product-reason { font-size: 0.75rem; color: var(--text-tertiary); line-height: 1.4; }
+.ai-error { color: var(--error); font-size: 0.85rem; }
+
+.ai-loading {
+  display: flex; justify-content: center; gap: 8px; padding: 12px;
+}
+
+.ai-chat-input-area {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-top: 1px solid var(--border);
+  background: var(--bg-elevated); flex-shrink: 0;
+}
+.ai-chat-input {
+  flex: 1; height: 40px; font-size: 0.9rem;
+  color: var(--text-primary); background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: var(--radius-full);
+  padding: 0 16px; transition: border-color var(--transition-fast);
+}
+.ai-chat-input:focus { border-color: var(--accent); outline: none; }
+.ai-chat-input::placeholder { color: var(--text-tertiary); }
+.ai-chat-send {
+  width: 40px; height: 40px; flex-shrink: 0;
+  background: var(--accent); color: var(--text-inverse);
+  border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition-fast);
+}
+.ai-chat-send:hover { background: var(--accent-light); transform: scale(1.05); }
+.ai-chat-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* ============================================
+   Responsive — new elements
+   ============================================ */
+@media (max-width: 768px) {
+  .nav-search-wrap { display: none; }
+  .hero-search-wrap { max-width: 100%; }
+  .ai-chat-panel { bottom: 0; right: 0; left: 0; width: 100%; max-width: 100%; border-radius: var(--radius-xl) var(--radius-xl) 0 0; max-height: 80vh; }
+  .ai-fab { bottom: 20px; right: 20px; }
+  .products-toolbar { flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-sm); }
+  .hero-title { font-size: 2.2rem; }
 }

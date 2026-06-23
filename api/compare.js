@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+﻿export default async function handler(req, res) {
   try {
     const { products } = req.body
 
@@ -17,15 +17,15 @@ export default async function handler(req, res) {
     }))
 
     const llmRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `You are a helpful product comparison assistant for ShopWithPay (an Indian e-commerce store).
-Compare these products for a buyer. All prices are in ₹ (INR).
+              text: `You are a helpful product comparison assistant for LuxCart (an Indian e-commerce store).
+Compare these products for a buyer. All prices are in â‚¹ (INR).
 
 Products:
 ${JSON.stringify(cleanProducts, null, 2)}
@@ -34,7 +34,7 @@ Return ONLY valid JSON (no markdown, no backticks):
 {
   "features": ["Price", "Category", "Brand", "Rating", "Best For", "Key Strength", "Value for Money"],
   "comparison": {
-    "Price": { "<ProductName1>": "₹value", "<ProductName2>": "₹value" },
+    "Price": { "<ProductName1>": "â‚¹value", "<ProductName2>": "â‚¹value" },
     "Category": { "<ProductName1>": "value", "<ProductName2>": "value" },
     "Brand": { "<ProductName1>": "value", "<ProductName2>": "value" },
     "Rating": { "<ProductName1>": "4.5/5", "<ProductName2>": "4.2/5" },
@@ -68,7 +68,7 @@ Use the actual product names as keys. Include every feature listed above.`,
       features.forEach(feature => {
         comp[feature] = {}
         cleanProducts.forEach(p => {
-          if (feature === "Price") comp[feature][p.name] = `₹${p.price?.toLocaleString("en-IN")}`
+          if (feature === "Price") comp[feature][p.name] = `â‚¹${p.price?.toLocaleString("en-IN")}`
           else if (feature === "Category") comp[feature][p.name] = p.category
           else if (feature === "Brand") comp[feature][p.name] = p.brand
           else if (feature === "Rating") comp[feature][p.name] = `${p.rating}/5`
@@ -88,3 +88,5 @@ Use the actual product names as keys. Include every feature listed above.`,
     res.status(500).json({ error: err.message })
   }
 }
+
+

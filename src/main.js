@@ -1,102 +1,153 @@
-// Main Entry — ShopWithPay
+// Main Entry — LuxCart
 import './style.css';
-import { collections, products, newArrivals } from './data/products.js';
-import { createProductCard, initUI } from './modules/ui.js';
+import { createProductCard, initUI, showProductModal } from './modules/ui.js';
 import { initCart } from './modules/cart.js';
 import { initAuth } from './modules/auth.js';
 import { initAISearch } from './modules/ai-search.js';
-import { initCompare } from './modules/compare.js';
 import { initOrders } from './modules/orders.js';
-import { initAdmin } from './modules/admin.js';
 import {
-  initRevealAnimations, initCounterAnimation, initParticles,
-  initCursorGlow, initNavScroll, initMobileMenu, initCountdown,
-  initSmoothScroll, initPreloader, initTiltEffect,
+  initRevealAnimations, initCursorGlow, initNavScroll, initPreloader,
 } from './modules/animations.js';
 
-function renderCollections() {
-  const grid = document.getElementById('collections-grid');
-  if (!grid) return;
-  collections.forEach((col, i) => {
-    const card = document.createElement('div');
-    card.className = 'collection-card reveal-up';
-    card.style.setProperty('--delay', `${i * 0.1}s`);
-    card.innerHTML = `
-      <img src="${col.image}" alt="${col.name}" loading="lazy" />
-      <div class="collection-overlay">
-        <div class="collection-info">
-          <h3 class="collection-name">${col.name}</h3>
-          <span class="collection-count">${col.count} Products</span>
-        </div>
-        <a href="#trending" class="collection-link">
-          Explore
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
+// ─── State ────────────────────────────────────────────────────────────────────
+let allProducts = [];
+let activeFilter = 'all';
+let searchQuery = '';
 
-async function renderProducts() {
-  const grid = document.getElementById('products-grid');
-  if (!grid) return;
-
-  let productList = products;
-
-  // Try to fetch from API first
+// ─── Fetch products from MongoDB (no local JSON fallback) ─────────────────────
+async function fetchProducts() {
   try {
     const res = await fetch('/api/server?action=products');
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) {
-      productList = data.map((p, i) => ({
+      return data.map((p, i) => ({
         ...p,
         id: p._id || p.id || i,
-        image: p.image || products[i % products.length]?.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=650&fit=crop&q=80',
-        sizes: p.sizes || ['One Size'],
-        colors: p.colors || ['#1a1a2e'],
-        badge: p.badge || (i % 3 === 0 ? 'new' : i % 3 === 1 ? 'sale' : ''),
-        originalPrice: p.originalPrice || (i % 2 === 0 ? Math.round(p.price * 1.3) : null),
+        image: p.image || `https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop`,
         rating: p.rating || 4.5,
-        reviews: p.reviews || Math.floor(Math.random() * 5000 + 500),
+        reviews: p.reviews || 500,
       }));
     }
-  } catch {
-    // Use local fallback data
+  } catch (e) {
+    console.warn('Could not fetch products from API:', e.message);
+  }
+  return [];
+}
+
+// ─── Render products with filter + search ────────────────────────────────────
+function renderProducts() {
+  const grid = document.getElementById('products-grid');
+  const empty = document.getElementById('products-empty');
+  const title = document.getElementById('toolbar-title');
+  const count = document.getElementById('toolbar-count');
+  if (!grid) return;
+
+  let filtered = allProducts;
+
+  if (activeFilter !== 'all') {
+    filtered = filtered.filter(p => p.category?.toLowerCase() === activeFilter.toLowerCase());
   }
 
-  productList.forEach((product, i) => {
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(p =>
+      p.name?.toLowerCase().includes(q) ||
+      p.description?.toLowerCase().includes(q) ||
+      p.brand?.toLowerCase().includes(q) ||
+      p.category?.toLowerCase().includes(q)
+    );
+    title.textContent = `Results for "${searchQuery}"`;
+  } else {
+    title.textContent = activeFilter === 'all' ? 'All Products' : activeFilter.charAt(0).toUpperCase() + activeFilter.slice(1);
+  }
+
+  count.textContent = `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`;
+
+  grid.innerHTML = '';
+  if (filtered.length === 0) {
+    empty.style.display = 'flex';
+    return;
+  }
+  empty.style.display = 'none';
+
+  filtered.forEach((product, i) => {
     const card = createProductCard(product);
-    card.style.setProperty('--delay', `${i * 0.05}s`);
+    card.style.setProperty('--delay', `${Math.min(i * 0.04, 0.5)}s`);
     card.classList.add('reveal-up');
     grid.appendChild(card);
   });
+
+  initRevealAnimations();
 }
 
+// ─── Search logic ─────────────────────────────────────────────────────────────
+function initSearch() {
+  const navInput = document.getElementById('main-search-input');
+  const heroInput = document.getElementById('hero-search-input');
+  const heroBtn = document.getElementById('hero-search-btn');
+  const clearBtn = document.getElementById('search-clear-btn');
+  const clearSearchBtn = document.getElementById('clear-search-btn');
+
+  function doSearch(val) {
+    searchQuery = val.trim();
+    if (clearBtn) clearBtn.style.display = searchQuery ? 'flex' : 'none';
+    renderProducts();
+    if (searchQuery) {
+      document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  if (navInput) {
+    navInput.addEventListener('input', e => doSearch(e.target.value));
+    navInput.addEventListener('keydown', e => { if (e.key === 'Escape') { navInput.value = ''; doSearch(''); } });
+  }
+  if (heroInput) {
+    heroInput.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(heroInput.value); });
+  }
+  if (heroBtn) {
+    heroBtn.addEventListener('click', () => doSearch(heroInput?.value || ''));
+  }
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => { if (navInput) navInput.value = ''; doSearch(''); });
+  }
+  if (clearSearchBtn) {
+    clearSearchBtn.addEventListener('click', () => {
+      if (navInput) navInput.value = '';
+      if (heroInput) heroInput.value = '';
+      doSearch('');
+    });
+  }
+}
+
+// ─── Filter buttons ───────────────────────────────────────────────────────────
+function initFilters() {
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter || 'all';
+      renderProducts();
+    });
+  });
+}
+
+// ─── Boot ─────────────────────────────────────────────────────────────────────
 async function init() {
   await initPreloader();
 
-  renderCollections();
-  await renderProducts();
+  allProducts = await fetchProducts();
+  renderProducts();
 
   initUI();
   initCart();
   initAuth();
   initAISearch();
-  initCompare();
   initOrders();
-  initAdmin();
+  initSearch();
+  initFilters();
 
-  initRevealAnimations();
-  initCounterAnimation();
-  initParticles();
   initCursorGlow();
   initNavScroll();
-  initMobileMenu();
-  initCountdown();
-  initSmoothScroll();
-
-  setTimeout(initTiltEffect, 200);
 }
 
 document.addEventListener('DOMContentLoaded', init);

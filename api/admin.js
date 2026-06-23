@@ -1,4 +1,4 @@
-import { getDB } from "./_db.js"
+﻿import { getDB } from "./_db.js"
 import jwt from "jsonwebtoken"
 import { ObjectId } from "mongodb"
 
@@ -12,15 +12,15 @@ function verifyToken(req) {
   }
 }
 
-// Uses text-embedding-004 — works with Gemini API key (no Cloud Console setup needed)
+// Uses text-embedding-004 â€” works with Gemini API key (no Cloud Console setup needed)
 async function generateEmbedding(text) {
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent?key=${process.env.GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${process.env.GEMINI_API_KEY}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "models/embedding-001",
+        model: "models/gemini-embedding-001",
         content: { parts: [{ text }] },
       }),
     }
@@ -112,3 +112,4 @@ export default async function handler(req, res) {
     res.status(500).json({ error: err.message })
   }
 }
+
