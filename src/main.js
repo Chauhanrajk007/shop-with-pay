@@ -6,6 +6,7 @@ import { initAuth } from './modules/auth.js';
 import { initAISearch } from './modules/ai-search.js';
 import { initCompare } from './modules/compare.js';
 import { initOrders } from './modules/orders.js';
+import { initWishlist } from './modules/wishlist.js';
 import {
   initRevealAnimations, initCursorGlow, initNavScroll, initPreloader,
 } from './modules/animations.js';
@@ -28,6 +29,9 @@ async function fetchProducts() {
         rating: p.rating || 4.5,
         reviews: p.reviews || 500,
       }));
+      console.log('Fetched products:', allProducts.length);
+      window.allProducts = allProducts; // expose for wishlist
+      return allProducts;
     }
   } catch (e) {
     console.warn('Could not fetch products from API:', e.message);
@@ -84,29 +88,40 @@ function renderProducts() {
 // ─── Search ───────────────────────────────────────────────────────────────────
 function initSearch() {
   const navInput = document.getElementById('main-search-input');
-  const heroInput = document.getElementById('hero-search-input');
-  const heroBtn = document.getElementById('hero-search-btn');
   const clearBtn = document.getElementById('search-clear-btn');
-  const clearSearchBtn = document.getElementById('clear-search-btn');
+  const sendBtn = document.getElementById('search-send-btn');
+  const clearSearchBtn = document.getElementById('clear-search');
 
-  function doSearch(val) {
-    searchQuery = val.trim();
-    if (clearBtn) clearBtn.style.display = searchQuery ? 'flex' : 'none';
-    renderProducts();
-    if (searchQuery) {
-      document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  function doSearch(query) {
+    searchQuery = query.toLowerCase().trim();
+    if (clearSearchBtn) {
+      if (searchQuery) clearSearchBtn.style.display = 'inline-flex';
+      else clearSearchBtn.style.display = 'none';
     }
+    if (clearBtn) {
+      if (searchQuery) clearBtn.style.display = 'flex';
+      else clearBtn.style.display = 'none';
+    }
+    renderProducts();
   }
 
   if (navInput) {
-    navInput.addEventListener('input', e => doSearch(e.target.value));
-    navInput.addEventListener('keydown', e => { if (e.key === 'Escape') { navInput.value = ''; doSearch(''); } });
+    navInput.addEventListener('input', (e) => {
+      // For basic search
+      doSearch(e.target.value);
+    });
+    navInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && window.doAISearch) {
+        window.doAISearch(e.target.value);
+      }
+    });
   }
-  if (heroInput) {
-    heroInput.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(heroInput.value); });
-  }
-  if (heroBtn) {
-    heroBtn.addEventListener('click', () => doSearch(heroInput?.value || ''));
+  if (sendBtn) {
+    sendBtn.addEventListener('click', () => {
+      if (navInput && window.doAISearch) {
+        window.doAISearch(navInput.value);
+      }
+    });
   }
   if (clearBtn) {
     clearBtn.addEventListener('click', () => { if (navInput) navInput.value = ''; doSearch(''); });
@@ -114,8 +129,10 @@ function initSearch() {
   if (clearSearchBtn) {
     clearSearchBtn.addEventListener('click', () => {
       if (navInput) navInput.value = '';
-      if (heroInput) heroInput.value = '';
       doSearch('');
+      // Also clear AI results if any
+      const banner = document.getElementById('ai-search-banner');
+      if (banner) banner.remove();
     });
   }
 }
@@ -145,6 +162,7 @@ async function init() {
   initAISearch();
   initCompare();
   initOrders();
+  initWishlist();
   initSearch();
   initFilters();
 

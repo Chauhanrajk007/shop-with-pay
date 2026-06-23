@@ -1,114 +1,99 @@
 // AI Search Module — LuxCart
-// Full-screen AI search overlay (like Google AI mode / ChatGPT)
+// Renders AI search results inline in the main products grid
 
-import { formatPrice } from './ui.js';
-import { addToCart } from './cart.js';
-
-function openAI() {
-  document.getElementById('ai-fullscreen')?.classList.add('open');
-  document.body.classList.add('no-scroll');
-  document.getElementById('ai-fs-input')?.focus();
-}
-
-function closeAI() {
-  document.getElementById('ai-fullscreen')?.classList.remove('open');
-  document.body.classList.remove('no-scroll');
-}
-
-function appendMessage(role, html) {
-  const body = document.getElementById('ai-fs-body');
-  if (!body) return;
-  // Hide welcome on first message
-  const welcome = body.querySelector('.ai-fs-welcome');
-  if (welcome) welcome.style.display = 'none';
-
-  const msg = document.createElement('div');
-  msg.className = `ai-fs-msg ai-fs-msg-${role}`;
-  msg.innerHTML = html;
-  body.appendChild(msg);
-  body.scrollTop = body.scrollHeight;
-}
-
-function renderProductCards(products) {
-  return `<div class="ai-fs-products">${products.map(p => `
-    <div class="ai-fs-product-card" data-id="${p._id || p.id || ''}">
-      <img src="${p.image || ''}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'" />
-      <div class="ai-fs-product-info">
-        <span class="ai-fs-product-brand">${p.brand || p.category || ''}</span>
-        <h4>${p.name}</h4>
-        <span class="ai-fs-product-price">${formatPrice(p.price)}</span>
-        ${p.reason ? `<p class="ai-fs-product-reason">${p.reason}</p>` : ''}
-      </div>
-    </div>
-  `).join('')}</div>`;
-}
-
-async function sendQuery() {
-  const input = document.getElementById('ai-fs-input');
-  const query = input?.value?.trim();
-  if (!query) return;
-
-  appendMessage('user', `<p>${query}</p>`);
-  input.value = '';
-
-  // Typing indicator
-  const typingId = 'typing-' + Date.now();
-  appendMessage('ai', `<div class="ai-fs-typing" id="${typingId}"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div>`);
-
-  try {
-    const res = await fetch('/api/rag-search', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query }),
-    });
-    const data = await res.json();
-
-    // Remove typing
-    document.getElementById(typingId)?.closest('.ai-fs-msg')?.remove();
-
-    if (data.error) {
-      appendMessage('ai', `<p class="ai-fs-error">⚠️ ${data.error}</p>`);
-      return;
-    }
-
-    let html = '';
-    if (data.reasoning) html += `<p class="ai-fs-reasoning">${data.reasoning}</p>`;
-    if (data.products?.length > 0) {
-      html += renderProductCards(data.products);
-    } else {
-      html += `<p>No matching products found. Try rephrasing your query!</p>`;
-    }
-    appendMessage('ai', html);
-
-  } catch (e) {
-    document.getElementById(typingId)?.closest('.ai-fs-msg')?.remove();
-    appendMessage('ai', `<p class="ai-fs-error">⚠️ Could not reach AI. Check your connection.</p>`);
-  }
-
-  const body = document.getElementById('ai-fs-body');
-  if (body) body.scrollTop = body.scrollHeight;
-}
+import { createProductCard } from './ui.js';
 
 export function initAISearch() {
-  // Hero "Ask AI" button opens full-screen overlay
-  document.getElementById('hero-ai-btn')?.addEventListener('click', openAI);
+  // Expose function for main search input to trigger
+  window.doAISearch = async function(query) {
+    if (!query) return;
 
-  // Close
-  document.getElementById('ai-fs-close')?.addEventListener('click', closeAI);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAI(); });
+    const grid = document.getElementById('products');
+    if (!grid) return;
 
-  // Send
-  document.getElementById('ai-fs-send')?.addEventListener('click', sendQuery);
-  document.getElementById('ai-fs-input')?.addEventListener('keypress', e => {
-    if (e.key === 'Enter') sendQuery();
-  });
+    // Show loading state
+    grid.classList.add('loading');
+    
+    // Remove existing AI banner if any
+    document.getElementById('ai-search-banner')?.remove();
 
-  // Suggestion chips
-  document.querySelectorAll('.ai-fs-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const input = document.getElementById('ai-fs-input');
-      if (input) input.value = chip.dataset.query;
-      sendQuery();
-    });
-  });
+    try {
+      const res = await fetch('/api/rag-search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
+      });
+      const data = await res.json();
+      grid.classList.remove('loading');
+
+      if (data.error) {
+        console.error('AI Search error:', data.error);
+        return;
+      }
+
+      // Add banner above grid
+      if (data.reasoning) {
+        const banner = document.createElement('div');
+        banner.id = 'ai-search-banner';
+        banner.className = 'ai-search-banner';
+        banner.innerHTML = `
+          <div class="ai-search-banner-text">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+            <div>
+              <strong>AI Picked for you:</strong>
+              <p>${data.reasoning}</p>
+            </div>
+          </div>
+          <button class="btn btn-outline btn-sm" id="clear-search">Clear</button>
+        `;
+        grid.parentNode.insertBefore(banner, grid);
+
+        document.getElementById('clear-search').addEventListener('click', () => {
+          banner.remove();
+          document.getElementById('main-search-input').value = '';
+          // trigger normal empty search to reset grid
+          if (window.allProducts) {
+             grid.innerHTML = '';
+             window.allProducts.forEach(p => grid.appendChild(createProductCard(p)));
+          }
+        });
+      }
+
+      // Render AI selected products
+      grid.innerHTML = '';
+      if (data.products && data.products.length > 0) {
+        // Map data.products to full product objects if possible
+        const fullProducts = data.products.map(aiProd => {
+           const fullP = window.allProducts?.find(p => p.name === aiProd.name) || aiProd;
+           // If AI gave a specific reason, attach it temporarily
+           if (aiProd.reason) fullP.ai_reason = aiProd.reason;
+           return fullP;
+        });
+        
+        fullProducts.forEach(p => {
+          const card = createProductCard(p);
+          // Insert the reason text below name
+          if (p.ai_reason) {
+            const reasonEl = document.createElement('div');
+            reasonEl.style.fontSize = '0.75rem';
+            reasonEl.style.color = 'var(--accent)';
+            reasonEl.style.marginTop = '4px';
+            reasonEl.style.lineHeight = '1.4';
+            reasonEl.textContent = p.ai_reason;
+            card.querySelector('.product-name').after(reasonEl);
+          }
+          grid.appendChild(card);
+        });
+      } else {
+        grid.innerHTML = '<div class="products-empty">No AI recommendations found.</div>';
+      }
+
+      // Scroll to top of products
+      grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } catch (e) {
+      grid.classList.remove('loading');
+      console.error('Failed to connect to AI Search', e);
+    }
+  };
 }
