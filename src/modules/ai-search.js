@@ -64,13 +64,17 @@ export function initAISearch() {
       if (data.products && data.products.length > 0) {
         // Map data.products to full product objects if possible
         const fullProducts = data.products.map(aiProd => {
-           const fullP = window.allProducts?.find(p => p.name === aiProd.name) || aiProd;
+           // AI now returns `id` instead of `name`
+           const fullP = window.allProducts?.find(p => String(p.id) === String(aiProd.id)) || aiProd;
            // If AI gave a specific reason, attach it temporarily
            if (aiProd.reason) fullP.ai_reason = aiProd.reason;
            return fullP;
         });
         
-        fullProducts.forEach(p => {
+        // Filter out products that failed to match completely so we don't render broken cards
+        const validProducts = fullProducts.filter(p => p && p.image);
+
+        validProducts.forEach(p => {
           const card = createProductCard(p);
           // Insert the reason text below name
           if (p.ai_reason) {
@@ -80,7 +84,7 @@ export function initAISearch() {
             reasonEl.style.marginTop = '4px';
             reasonEl.style.lineHeight = '1.4';
             reasonEl.textContent = p.ai_reason;
-            card.querySelector('.product-name').after(reasonEl);
+            card.querySelector('.product-name')?.after(reasonEl);
           }
           grid.appendChild(card);
         });

@@ -22,16 +22,15 @@ async function fetchProducts() {
     const res = await fetch('/api/server?action=products');
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) {
-      return data.map((p, i) => ({
+      const mappedData = data.map((p, i) => ({
         ...p,
         id: p._id || p.id || i,
         image: p.image || `https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop`,
         rating: p.rating || 4.5,
         reviews: p.reviews || 500,
       }));
-      console.log('Fetched products:', allProducts.length);
-      window.allProducts = allProducts; // expose for wishlist
-      return allProducts;
+      window.allProducts = mappedData;
+      return mappedData;
     }
   } catch (e) {
     console.warn('Could not fetch products from API:', e.message);
