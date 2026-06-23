@@ -1,4 +1,4 @@
-// Compare Module — ShopWithPay
+﻿// Compare Module â€” LuxCart
 import { showToast, formatPrice } from './ui.js';
 
 let compareList = [];
@@ -67,7 +67,7 @@ async function openCompareModal() {
     renderComparison(data, body);
   } catch (err) {
     loading.style.display = 'none';
-    // Fallback — render basic comparison without AI
+    // Fallback â€” render basic comparison without AI
     renderBasicComparison(body);
   }
 }
@@ -90,7 +90,7 @@ function renderComparison(data, container) {
     data.features.forEach(feature => {
       html += `<tr><td><strong>${feature}</strong></td>`;
       productNames.forEach(name => {
-        const value = data.comparison[feature]?.[name] || '—';
+        const value = data.comparison[feature]?.[name] || 'â€”';
         html += `<td>${value}</td>`;
       });
       html += '</tr>';
@@ -101,7 +101,7 @@ function renderComparison(data, container) {
 
   // Verdict
   if (data.verdict) {
-    html += `<div class="compare-verdict"><div class="compare-verdict-icon">✦</div><p>${data.verdict}</p></div>`;
+    html += `<div class="compare-verdict"><div class="compare-verdict-icon">âœ¦</div><p>${data.verdict}</p></div>`;
   }
 
   container.innerHTML = html;
@@ -122,13 +122,13 @@ function renderBasicComparison(container) {
   features.forEach(feature => {
     html += `<tr><td><strong>${feature}</strong></td>`;
     compareList.forEach(p => {
-      let val = '—';
+      let val = 'â€”';
       if (feature === 'Price') val = formatPrice(p.price);
-      else if (feature === 'Category') val = p.category || '—';
-      else if (feature === 'Brand') val = p.brand || '—';
-      else if (feature === 'Rating') val = `${p.rating}/5 ★`;
+      else if (feature === 'Category') val = p.category || 'â€”';
+      else if (feature === 'Brand') val = p.brand || 'â€”';
+      else if (feature === 'Rating') val = `${p.rating}/5 â˜…`;
       else if (feature === 'Reviews') val = p.reviews?.toLocaleString() || '0';
-      else if (feature === 'Description') val = p.description || '—';
+      else if (feature === 'Description') val = p.description || 'â€”';
       html += `<td>${val}</td>`;
     });
     html += '</tr>';
@@ -150,3 +150,4 @@ export function initCompare() {
   document.getElementById('compare-close')?.addEventListener('click', closeCompareModal);
   document.getElementById('compare-overlay')?.addEventListener('click', closeCompareModal);
 }
+

@@ -1,4 +1,4 @@
-// Auth Module — ShopWithPay
+﻿// Auth Module â€” LuxCart
 import { showToast } from './ui.js';
 
 let authMode = 'login';
@@ -110,3 +110,4 @@ export function initAuth() {
   // Check if already logged in
   if (isLoggedIn()) updateAuthUI(true);
 }
+

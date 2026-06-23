@@ -127,7 +127,29 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <input type="text" id="hero-search-input" class="hero-search-input" placeholder="Search headphones, laptops, keyboards..." autocomplete="off" />
           <button class="hero-search-btn" id="hero-search-btn">Search</button>
+          <button class="hero-ai-btn" id="hero-ai-btn" title="Ask AI">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v2m0 14v2m-7-9H3m18 0h-2M5.6 5.6l1.4 1.4m9.9 9.9l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>
+            <span>Ask AI</span>
+          </button>
         </div>
+      </div>
+    </section>
+
+    <!-- AI Search Results (inline, below hero) -->
+    <section id="ai-results-section" class="section ai-results-section" style="display:none">
+      <div class="container">
+        <div class="ai-results-header">
+          <div class="ai-results-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 3v2m0 14v2m-7-9H3m18 0h-2M5.6 5.6l1.4 1.4m9.9 9.9l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>
+            <h3>AI Recommendations</h3>
+          </div>
+          <button class="btn btn-outline btn-sm" id="ai-results-close">✕ Close</button>
+        </div>
+        <p class="ai-reasoning-text" id="ai-reasoning-text"></p>
+        <div class="ai-loading" id="ai-loading" style="display:none">
+          <div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>
+        </div>
+        <div class="ai-results-grid" id="ai-results-grid"></div>
       </div>
     </section>
 
@@ -276,50 +298,36 @@
     </div>
   </div>
 
-  <!-- AI Floating Chat -->
-  <div class="ai-fab" id="ai-fab">
-    <div class="ai-fab-icon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v2m0 14v2m-7-9H3m18 0h-2M5.6 5.6l1.4 1.4m9.9 9.9l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>
+  <!-- Compare Bar (floating bottom) -->
+  <div class="compare-bar" id="compare-bar" style="display:none">
+    <div class="compare-bar-info">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22V8"/><path d="m21 3-9 9"/><path d="M3 3l9 9"/></svg>
+      <span>Compare (<span id="compare-count">0</span> items)</span>
     </div>
-    <span class="ai-fab-label">Ask AI</span>
+    <div class="compare-bar-actions">
+      <button class="btn btn-outline compare-clear" id="compare-clear-btn">Clear</button>
+      <button class="btn btn-primary compare-now" id="compare-open-btn">
+        <span>Compare Now</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+    </div>
   </div>
 
-  <!-- AI Chat Panel (bottom floating) -->
-  <div class="ai-chat-panel" id="ai-panel">
-    <div class="ai-chat-header">
-      <div class="ai-chat-title">
-        <div class="ai-chat-avatar">✦</div>
-        <div>
-          <span class="ai-chat-name">LuxCart AI</span>
-          <span class="ai-chat-status">Ask me anything about products</span>
-        </div>
-      </div>
-      <button class="ai-chat-close" id="ai-panel-close" aria-label="Close AI">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  <!-- Compare Modal -->
+  <div class="modal-overlay" id="compare-overlay"></div>
+  <div class="compare-modal" id="compare-modal">
+    <div class="compare-header">
+      <h3>Product Comparison</h3>
+      <button class="modal-close" id="compare-close" aria-label="Close Compare">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
     </div>
-    <div class="ai-chat-messages" id="ai-results">
-      <div class="ai-welcome-msg">
-        <p>👋 Hi! I'm your AI shopping assistant.</p>
-        <p>Try asking me something like:</p>
-        <div class="ai-suggestions">
-          <button class="ai-suggestion" data-query="wireless headphones with noise cancellation under ₹15000">🎧 Wireless ANC headphones</button>
-          <button class="ai-suggestion" data-query="gaming mouse under ₹5000">🖱️ Gaming mouse under ₹5000</button>
-          <button class="ai-suggestion" data-query="best laptop for coding">💻 Best laptop for coding</button>
-          <button class="ai-suggestion" data-query="portable SSD for backup">💾 Portable SSD</button>
-        </div>
-      </div>
-    </div>
-    <div class="ai-loading" id="ai-loading" style="display:none">
-      <div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>
-    </div>
-    <div class="ai-chat-input-area">
-      <input type="text" id="ai-input" class="ai-chat-input" placeholder="What are you looking for?" autocomplete="off" />
-      <button class="ai-chat-send" id="ai-send-btn" aria-label="Send">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="m22 2-11 11"/></svg>
-      </button>
-    </div>
+    <div class="ai-loading" id="compare-loading" style="display:none"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div>
+    <div class="compare-body" id="compare-body"></div>
   </div>
+
+
+
 
   <!-- Toast -->
   <div class="toast-container" id="toast-container"></div>

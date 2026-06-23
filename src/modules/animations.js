@@ -1,4 +1,4 @@
-// Animations Module — ShopWithPay
+﻿// Animations Module â€” LuxCart
 
 export function initRevealAnimations() {
   const reveals = document.querySelectorAll('.reveal-up, .reveal-scale');
@@ -180,3 +180,4 @@ export function initTiltEffect() {
     card.addEventListener('mouseleave', () => { card.style.transform = ''; });
   });
 }
+

@@ -1,4 +1,4 @@
-// Orders Module — ShopWithPay
+﻿// Orders Module â€” LuxCart
 import { showToast, formatPrice } from './ui.js';
 import { getToken, isLoggedIn, openAuth } from './auth.js';
 
@@ -84,3 +84,4 @@ export function initOrders() {
 }
 
 export { openOrders };
+

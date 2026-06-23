@@ -1,4 +1,4 @@
-﻿// Cart Module â€” ShopWithPay (with Razorpay checkout)
+﻿// Cart Module â€” LuxCart (with Razorpay checkout)
 import { showToast, formatPrice } from './ui.js';
 import { getToken, isLoggedIn, openAuth } from './auth.js';
 
@@ -169,4 +169,5 @@ export function initCart() {
   document.getElementById('cart-overlay').addEventListener('click', closeCart);
   document.getElementById('checkout-btn').addEventListener('click', handleCheckout);
 }
+
 

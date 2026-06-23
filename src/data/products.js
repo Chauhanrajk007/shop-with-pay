@@ -1,4 +1,4 @@
-// Product data for ShopWithPay — local fallback (main data comes from MongoDB)
+﻿// Product data for LuxCart â€” local fallback (main data comes from MongoDB)
 export const collections = [
   {
     id: 'c1',
@@ -163,3 +163,4 @@ export const newArrivals = [
     sizes: ['One Size'], colors: ['#1a1a2e', '#f5f0e1'], isNew: true,
   },
 ];
+

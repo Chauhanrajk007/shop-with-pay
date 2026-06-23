@@ -1,4 +1,4 @@
-// Admin Module — ShopWithPay
+﻿// Admin Module â€” LuxCart
 import { showToast, formatPrice } from './ui.js';
 import { getToken, isLoggedIn, openAuth } from './auth.js';
 
@@ -44,7 +44,7 @@ async function fetchAdminProducts() {
       row.innerHTML = `
         <div class="admin-product-info">
           <div class="admin-product-name">${product.name}</div>
-          <div class="admin-product-meta">${product.category || ''} · ${product.brand || ''} · ${formatPrice(product.price)}</div>
+          <div class="admin-product-meta">${product.category || ''} Â· ${product.brand || ''} Â· ${formatPrice(product.price)}</div>
         </div>
         <div class="admin-actions">
           <button class="admin-action-btn edit" aria-label="Edit">
@@ -152,3 +152,4 @@ export function initAdmin() {
   document.getElementById('admin-form-overlay')?.addEventListener('click', closeAdminForm);
   document.getElementById('admin-form')?.addEventListener('submit', saveProduct);
 }
+

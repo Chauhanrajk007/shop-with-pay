@@ -1,9 +1,10 @@
 // Main Entry — LuxCart
 import './style.css';
-import { createProductCard, initUI, showProductModal } from './modules/ui.js';
+import { createProductCard, initUI } from './modules/ui.js';
 import { initCart } from './modules/cart.js';
 import { initAuth } from './modules/auth.js';
 import { initAISearch } from './modules/ai-search.js';
+import { initCompare } from './modules/compare.js';
 import { initOrders } from './modules/orders.js';
 import {
   initRevealAnimations, initCursorGlow, initNavScroll, initPreloader,
@@ -14,7 +15,7 @@ let allProducts = [];
 let activeFilter = 'all';
 let searchQuery = '';
 
-// ─── Fetch products from MongoDB (no local JSON fallback) ─────────────────────
+// ─── Fetch products from MongoDB ──────────────────────────────────────────────
 async function fetchProducts() {
   try {
     const res = await fetch('/api/server?action=products');
@@ -34,7 +35,7 @@ async function fetchProducts() {
   return [];
 }
 
-// ─── Render products with filter + search ────────────────────────────────────
+// ─── Render products ──────────────────────────────────────────────────────────
 function renderProducts() {
   const grid = document.getElementById('products-grid');
   const empty = document.getElementById('products-empty');
@@ -62,8 +63,8 @@ function renderProducts() {
   }
 
   count.textContent = `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`;
-
   grid.innerHTML = '';
+
   if (filtered.length === 0) {
     empty.style.display = 'flex';
     return;
@@ -80,7 +81,7 @@ function renderProducts() {
   initRevealAnimations();
 }
 
-// ─── Search logic ─────────────────────────────────────────────────────────────
+// ─── Search ───────────────────────────────────────────────────────────────────
 function initSearch() {
   const navInput = document.getElementById('main-search-input');
   const heroInput = document.getElementById('hero-search-input');
@@ -119,7 +120,7 @@ function initSearch() {
   }
 }
 
-// ─── Filter buttons ───────────────────────────────────────────────────────────
+// ─── Filters ──────────────────────────────────────────────────────────────────
 function initFilters() {
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -142,6 +143,7 @@ async function init() {
   initCart();
   initAuth();
   initAISearch();
+  initCompare();
   initOrders();
   initSearch();
   initFilters();
