@@ -87,7 +87,7 @@ function renderWishlist() {
     return;
   }
 
-   const items = wishlist.map(id => window.allProducts?.find(p => String(p.id) === String(id))).filter(Boolean);
+  const items = wishlist.map(id => window.allProducts?.find(p => String(p.id) === String(id))).filter(Boolean);
   
   body.innerHTML = items.map(p => `
     <div class="wishlist-item">

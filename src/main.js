@@ -111,15 +111,23 @@ function initSearch() {
       doSearch(e.target.value);
     });
     navInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && window.doAISearch) {
-        window.doAISearch(e.target.value);
+      if (e.key === 'Enter') {
+        const isAIEnabled = document.getElementById('ai-search-toggle')?.checked;
+        if (isAIEnabled && window.doAISearch) {
+          window.doAISearch(e.target.value);
+        } else {
+          doSearch(e.target.value);
+        }
       }
     });
   }
   if (sendBtn) {
     sendBtn.addEventListener('click', () => {
-      if (navInput && window.doAISearch) {
+      const isAIEnabled = document.getElementById('ai-search-toggle')?.checked;
+      if (isAIEnabled && navInput && window.doAISearch) {
         window.doAISearch(navInput.value);
+      } else if (navInput) {
+        doSearch(navInput.value);
       }
     });
   }

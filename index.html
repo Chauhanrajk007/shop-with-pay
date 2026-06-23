@@ -30,11 +30,19 @@
         <span class="logo-text">LuxCart</span>
       </a>
 
-      <!-- AI-Powered Search Bar -->
+      <!-- AI-Powered Search Bar with Toggle -->
       <div class="nav-search-wrap">
         <svg class="nav-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="text" id="main-search-input" class="nav-search-input" placeholder="Search with AI... e.g. 'best phone under 30k'" autocomplete="off" />
-        <span class="nav-search-ai-badge">AI</span>
+        <input type="text" id="main-search-input" class="nav-search-input" placeholder="Search products..." autocomplete="off" />
+        
+        <label class="ai-toggle-label" title="Toggle AI Search Mode">
+          <span class="nav-search-ai-badge">AI</span>
+          <div class="toggle-switch">
+            <input type="checkbox" id="ai-search-toggle" checked>
+            <span class="slider"></span>
+          </div>
+        </label>
+
         <button class="nav-search-clear" id="search-clear-btn" style="display:none;">✕</button>
         <button class="nav-search-send" id="search-send-btn" aria-label="Search">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="m22 2-11 11"/></svg>
