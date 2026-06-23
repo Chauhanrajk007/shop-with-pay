@@ -39,10 +39,11 @@
         <li><a href="#about" class="nav-link" data-section="about">About</a></li>
       </ul>
       <div class="nav-actions">
-        <button class="nav-action-btn ai-trigger" id="ai-trigger-btn" aria-label="AI Assistant">
+        <button class="nav-action-btn ai-trigger" id="ai-trigger-btn" aria-label="AI Shopping Assistant">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2m0 14v2m-7-9H3m18 0h-2M5.6 5.6l1.4 1.4m9.9 9.9l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>
         </button>
-        <button class="nav-action-btn" id="search-btn" aria-label="Search">
+        <!-- Search button now opens AI panel directly -->
+        <button class="nav-action-btn ai-trigger" id="search-btn" aria-label="Ask AI">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         </button>
         <button class="nav-action-btn" id="wishlist-btn" aria-label="Wishlist">
@@ -129,28 +130,7 @@
     </div>
   </div>
 
-  <!-- Search Overlay -->
-  <div class="search-overlay" id="search-overlay">
-    <div class="search-overlay-inner">
-      <button class="search-close" id="search-close" aria-label="Close Search">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
-      <div class="search-content">
-        <h2 class="search-title">What are you looking for?</h2>
-        <div class="search-input-wrap">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="text" id="search-input" class="search-input" placeholder="Search products..." autocomplete="off" />
-        </div>
-        <div class="search-results" id="search-results"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- AI Assistant Pill -->
-  <div class="ai-pill" id="ai-pill">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v2m0 14v2m-7-9H3m18 0h-2M5.6 5.6l1.4 1.4m9.9 9.9l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>
-    <span class="ai-pill-text">Ask AI</span>
-  </div>
+  <!-- Search overlay removed — search icon now opens AI panel directly -->
 
   <!-- AI Assistant Panel -->
   <div class="ai-panel" id="ai-panel">

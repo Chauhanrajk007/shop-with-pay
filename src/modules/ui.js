@@ -164,51 +164,7 @@ function closeProductModal() {
   currentModalProduct = null;
 }
 
-function initSearch() {
-  const searchBtn = document.getElementById('search-btn');
-  const searchOverlay = document.getElementById('search-overlay');
-  const searchClose = document.getElementById('search-close');
-  const searchInput = document.getElementById('search-input');
-  const searchResults = document.getElementById('search-results');
-  const allProducts = [...products, ...newArrivals];
-
-  searchBtn.addEventListener('click', () => {
-    searchOverlay.classList.add('active'); document.body.classList.add('no-scroll');
-    setTimeout(() => searchInput.focus(), 300);
-  });
-  searchClose.addEventListener('click', () => {
-    searchOverlay.classList.remove('active'); document.body.classList.remove('no-scroll');
-    searchInput.value = ''; searchResults.innerHTML = '';
-  });
-  searchInput.addEventListener('input', () => {
-    const query = searchInput.value.toLowerCase().trim();
-    searchResults.innerHTML = '';
-    if (query.length < 2) return;
-    const results = allProducts.filter(p =>
-      p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query) || p.description.toLowerCase().includes(query)
-    );
-    if (results.length === 0) { searchResults.innerHTML = '<p style="color: var(--text-tertiary); padding: 1rem;">No products found</p>'; return; }
-    results.slice(0, 8).forEach((product) => {
-      const item = document.createElement('div');
-      item.className = 'search-result-item';
-      item.innerHTML = `
-        <img src="${product.image}" alt="${product.name}" loading="lazy" />
-        <div class="search-result-info"><h4>${product.name}</h4><span>${formatPrice(product.price)}</span></div>
-      `;
-      item.addEventListener('click', () => {
-        searchOverlay.classList.remove('active'); document.body.classList.remove('no-scroll');
-        searchInput.value = ''; searchResults.innerHTML = '';
-        openProductModal(product);
-      });
-      searchResults.appendChild(item);
-    });
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
-      searchOverlay.classList.remove('active'); document.body.classList.remove('no-scroll');
-    }
-  });
-}
+// Search is now handled by ai-search.js (search button opens AI panel directly)
 
 function initFilters() {
   const filterBtns = document.querySelectorAll('.filter-btn');
@@ -289,5 +245,5 @@ export function initUI() {
     const email = document.getElementById('newsletter-email').value;
     if (email) { showToast('success', 'Subscribed!', 'Welcome to ShopWithPay club'); document.getElementById('newsletter-email').value = ''; }
   });
-  initSearch(); initFilters(); initCarousel();
+  initFilters(); initCarousel();
 }

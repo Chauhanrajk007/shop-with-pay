@@ -1,15 +1,5 @@
-import { MongoClient } from "mongodb"
+import { getDB } from "./_db.js"
 import jwt from "jsonwebtoken"
-
-let client
-
-async function getDB() {
-  if (!client) {
-    client = new MongoClient(process.env.MONGODB_URI)
-    await client.connect()
-  }
-  return client.db("ragDB")
-}
 
 function verifyToken(req) {
   const auth = req.headers.authorization
@@ -38,13 +28,14 @@ export default async function handler(req, res) {
         razorpayOrderId,
         razorpayPaymentId,
         status: "completed",
-        createdAt: new Date()
+        createdAt: new Date(),
       })
       return res.json({ success: true, orderId: order.insertedId })
     }
 
     if (action === "list") {
-      const orders = await db.collection("orders")
+      const orders = await db
+        .collection("orders")
         .find({ userId: user.userId })
         .sort({ createdAt: -1 })
         .toArray()
@@ -53,7 +44,7 @@ export default async function handler(req, res) {
 
     res.json({ error: "Invalid action" })
   } catch (err) {
-    console.error(err)
+    console.error("orders.js error:", err)
     res.status(500).json({ error: err.message })
   }
 }

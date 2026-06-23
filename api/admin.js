@@ -1,15 +1,6 @@
-import { MongoClient, ObjectId } from "mongodb"
+import { getDB } from "./_db.js"
 import jwt from "jsonwebtoken"
-
-let client
-
-async function getDB() {
-  if (!client) {
-    client = new MongoClient(process.env.MONGODB_URI)
-    await client.connect()
-  }
-  return client.db("ragDB")
-}
+import { ObjectId } from "mongodb"
 
 function verifyToken(req) {
   const auth = req.headers.authorization
@@ -21,18 +12,23 @@ function verifyToken(req) {
   }
 }
 
+// Uses text-embedding-004 — works with Gemini API key (no Cloud Console setup needed)
 async function generateEmbedding(text) {
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${process.env.GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${process.env.GEMINI_API_KEY}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: { parts: [{ text }] } })
+      body: JSON.stringify({
+        model: "models/text-embedding-004",
+        content: { parts: [{ text }] },
+      }),
     }
   )
   const data = await response.json()
   if (!data.embedding || !data.embedding.values) {
-    throw new Error("Embedding generation failed")
+    console.error("Embedding error:", JSON.stringify(data))
+    throw new Error("Embedding generation failed: " + (data.error?.message || "Unknown"))
   }
   return data.embedding.values
 }
@@ -46,7 +42,8 @@ export default async function handler(req, res) {
     const action = req.query.action
 
     if (action === "list") {
-      const products = await db.collection("products")
+      const products = await db
+        .collection("products")
         .find({}, { projection: { embedding: 0 } })
         .toArray()
       return res.json(products)
@@ -57,7 +54,12 @@ export default async function handler(req, res) {
       if (!name || !description || !price) {
         return res.json({ error: "Name, description and price are required" })
       }
-      const embedding = await generateEmbedding(name + " " + description)
+      let embedding = []
+      try {
+        embedding = await generateEmbedding(name + " " + description)
+      } catch (e) {
+        console.warn("Embedding skipped:", e.message)
+      }
       const result = await db.collection("products").insertOne({
         name,
         description,
@@ -67,7 +69,8 @@ export default async function handler(req, res) {
         image: image || "",
         rating: 4.5,
         reviews: 0,
-        embedding
+        embedding,
+        createdAt: new Date(),
       })
       return res.json({ success: true, id: result.insertedId })
     }
@@ -75,7 +78,6 @@ export default async function handler(req, res) {
     if (action === "update") {
       const { id, name, description, category, brand, price, image } = req.body
       if (!id) return res.json({ error: "Product ID required" })
-
       const updates = {}
       if (name) updates.name = name
       if (description) updates.description = description
@@ -85,15 +87,15 @@ export default async function handler(req, res) {
       if (image) updates.image = image
 
       if (name || description) {
-        const product = await db.collection("products").findOne({ _id: new ObjectId(id) })
-        const embText = (name || product.name) + " " + (description || product.description)
-        updates.embedding = await generateEmbedding(embText)
+        try {
+          const product = await db.collection("products").findOne({ _id: new ObjectId(id) })
+          const embText = (name || product?.name || "") + " " + (description || product?.description || "")
+          updates.embedding = await generateEmbedding(embText)
+        } catch (e) {
+          console.warn("Embedding update skipped:", e.message)
+        }
       }
-
-      await db.collection("products").updateOne(
-        { _id: new ObjectId(id) },
-        { $set: updates }
-      )
+      await db.collection("products").updateOne({ _id: new ObjectId(id) }, { $set: updates })
       return res.json({ success: true })
     }
 
@@ -106,7 +108,7 @@ export default async function handler(req, res) {
 
     res.json({ error: "Invalid action" })
   } catch (err) {
-    console.error(err)
+    console.error("admin.js error:", err)
     res.status(500).json({ error: err.message })
   }
 }
