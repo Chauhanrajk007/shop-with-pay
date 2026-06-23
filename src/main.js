@@ -91,6 +91,24 @@ function initSearch() {
   const clearBtn = document.getElementById('search-clear-btn');
   const sendBtn = document.getElementById('search-send-btn');
   const clearSearchBtn = document.getElementById('clear-search');
+  const aiModeBtn = document.getElementById('ai-mode-btn');
+
+  let isAIEnabled = true;
+
+  if (aiModeBtn) {
+    aiModeBtn.addEventListener('click', () => {
+      isAIEnabled = !isAIEnabled;
+      if (isAIEnabled) {
+        aiModeBtn.classList.add('active');
+        navInput.placeholder = "Search products or ask AI...";
+        sendBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="m22 2-11 11"/></svg>';
+      } else {
+        aiModeBtn.classList.remove('active');
+        navInput.placeholder = "Search products...";
+        sendBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>';
+      }
+    });
+  }
 
   function doSearch(query) {
     searchQuery = query.toLowerCase().trim();
@@ -107,12 +125,11 @@ function initSearch() {
 
   if (navInput) {
     navInput.addEventListener('input', (e) => {
-      // For basic search
+      // Basic local filtering as you type
       doSearch(e.target.value);
     });
     navInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
-        const isAIEnabled = document.getElementById('ai-search-toggle')?.checked;
         if (isAIEnabled && window.doAISearch) {
           window.doAISearch(e.target.value);
         } else {
@@ -123,7 +140,6 @@ function initSearch() {
   }
   if (sendBtn) {
     sendBtn.addEventListener('click', () => {
-      const isAIEnabled = document.getElementById('ai-search-toggle')?.checked;
       if (isAIEnabled && navInput && window.doAISearch) {
         window.doAISearch(navInput.value);
       } else if (navInput) {
