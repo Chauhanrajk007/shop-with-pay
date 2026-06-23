@@ -120,6 +120,9 @@ function initSearch() {
       else clearBtn.style.display = 'none';
     }
     renderProducts();
+    if (searchQuery) {
+      document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   if (navInput) {

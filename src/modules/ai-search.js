@@ -8,7 +8,8 @@ export function initAISearch() {
   window.doAISearch = async function(query) {
     if (!query) return;
 
-    const grid = document.getElementById('products');
+    const grid = document.getElementById('products-grid');
+    const section = document.getElementById('products');
     if (!grid) return;
 
     // Show beautiful loading state inside grid
@@ -20,6 +21,9 @@ export function initAISearch() {
       </div>
     `;
     
+    // Scroll immediately to show the loading state
+    section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
     // Remove existing AI banner if any
     document.getElementById('ai-search-banner')?.remove();
 
@@ -99,7 +103,7 @@ export function initAISearch() {
       }
 
       // Scroll to top of products
-      grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     } catch (e) {
       grid.innerHTML = '<div class="products-empty">⚠️ Failed to connect to AI Search.</div>';
