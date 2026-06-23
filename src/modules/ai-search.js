@@ -1,49 +1,59 @@
 // AI Search Module — LuxCart
-// Only the inline "Ask AI" button beside search bar → shows results below hero
+// Full-screen AI search overlay (like Google AI mode / ChatGPT)
 
 import { formatPrice } from './ui.js';
+import { addToCart } from './cart.js';
 
-// ─── Inline AI Results (below hero) ──────────────────────────────────────────
-
-function renderInlineResults(data) {
-  const section = document.getElementById('ai-results-section');
-  const grid = document.getElementById('ai-results-grid');
-  const reasoning = document.getElementById('ai-reasoning-text');
-  const loading = document.getElementById('ai-loading');
-
-  if (loading) loading.style.display = 'none';
-
-  if (!data || data.error) {
-    reasoning.textContent = data?.error || 'Something went wrong.';
-    grid.innerHTML = '';
-    return;
-  }
-
-  reasoning.textContent = data.reasoning || '';
-
-  grid.innerHTML = (data.products || []).map(p => `
-    <div class="ai-result-card">
-      <img src="${p.image || ''}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'" />
-      <div class="ai-result-info">
-        <span class="ai-result-brand">${p.brand || p.category || ''}</span>
-        <h4 class="ai-result-name">${p.name}</h4>
-        <span class="ai-result-price">${formatPrice(p.price)}</span>
-        ${p.reason ? `<p class="ai-result-reason">${p.reason}</p>` : ''}
-      </div>
-    </div>
-  `).join('');
+function openAI() {
+  document.getElementById('ai-fullscreen')?.classList.add('open');
+  document.body.classList.add('no-scroll');
+  document.getElementById('ai-fs-input')?.focus();
 }
 
-async function doAISearch(query) {
-  const section = document.getElementById('ai-results-section');
-  const loading = document.getElementById('ai-loading');
-  const grid = document.getElementById('ai-results-grid');
+function closeAI() {
+  document.getElementById('ai-fullscreen')?.classList.remove('open');
+  document.body.classList.remove('no-scroll');
+}
 
-  section.style.display = 'block';
-  if (loading) loading.style.display = 'flex';
-  grid.innerHTML = '';
+function appendMessage(role, html) {
+  const body = document.getElementById('ai-fs-body');
+  if (!body) return;
+  // Hide welcome on first message
+  const welcome = body.querySelector('.ai-fs-welcome');
+  if (welcome) welcome.style.display = 'none';
 
-  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const msg = document.createElement('div');
+  msg.className = `ai-fs-msg ai-fs-msg-${role}`;
+  msg.innerHTML = html;
+  body.appendChild(msg);
+  body.scrollTop = body.scrollHeight;
+}
+
+function renderProductCards(products) {
+  return `<div class="ai-fs-products">${products.map(p => `
+    <div class="ai-fs-product-card" data-id="${p._id || p.id || ''}">
+      <img src="${p.image || ''}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'" />
+      <div class="ai-fs-product-info">
+        <span class="ai-fs-product-brand">${p.brand || p.category || ''}</span>
+        <h4>${p.name}</h4>
+        <span class="ai-fs-product-price">${formatPrice(p.price)}</span>
+        ${p.reason ? `<p class="ai-fs-product-reason">${p.reason}</p>` : ''}
+      </div>
+    </div>
+  `).join('')}</div>`;
+}
+
+async function sendQuery() {
+  const input = document.getElementById('ai-fs-input');
+  const query = input?.value?.trim();
+  if (!query) return;
+
+  appendMessage('user', `<p>${query}</p>`);
+  input.value = '';
+
+  // Typing indicator
+  const typingId = 'typing-' + Date.now();
+  appendMessage('ai', `<div class="ai-fs-typing" id="${typingId}"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div>`);
 
   try {
     const res = await fetch('/api/rag-search', {
@@ -52,39 +62,53 @@ async function doAISearch(query) {
       body: JSON.stringify({ query }),
     });
     const data = await res.json();
-    renderInlineResults(data);
+
+    // Remove typing
+    document.getElementById(typingId)?.closest('.ai-fs-msg')?.remove();
+
+    if (data.error) {
+      appendMessage('ai', `<p class="ai-fs-error">⚠️ ${data.error}</p>`);
+      return;
+    }
+
+    let html = '';
+    if (data.reasoning) html += `<p class="ai-fs-reasoning">${data.reasoning}</p>`;
+    if (data.products?.length > 0) {
+      html += renderProductCards(data.products);
+    } else {
+      html += `<p>No matching products found. Try rephrasing your query!</p>`;
+    }
+    appendMessage('ai', html);
+
   } catch (e) {
-    renderInlineResults({ error: 'Could not reach AI. Check your connection.' });
+    document.getElementById(typingId)?.closest('.ai-fs-msg')?.remove();
+    appendMessage('ai', `<p class="ai-fs-error">⚠️ Could not reach AI. Check your connection.</p>`);
   }
+
+  const body = document.getElementById('ai-fs-body');
+  if (body) body.scrollTop = body.scrollHeight;
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
-
 export function initAISearch() {
-  const heroAiBtn = document.getElementById('hero-ai-btn');
-  const heroInput = document.getElementById('hero-search-input');
+  // Hero "Ask AI" button opens full-screen overlay
+  document.getElementById('hero-ai-btn')?.addEventListener('click', openAI);
 
-  // "Ask AI" button click
-  if (heroAiBtn) {
-    heroAiBtn.addEventListener('click', () => {
-      const q = heroInput?.value?.trim();
-      if (q) doAISearch(q);
+  // Close
+  document.getElementById('ai-fs-close')?.addEventListener('click', closeAI);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAI(); });
+
+  // Send
+  document.getElementById('ai-fs-send')?.addEventListener('click', sendQuery);
+  document.getElementById('ai-fs-input')?.addEventListener('keypress', e => {
+    if (e.key === 'Enter') sendQuery();
+  });
+
+  // Suggestion chips
+  document.querySelectorAll('.ai-fs-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const input = document.getElementById('ai-fs-input');
+      if (input) input.value = chip.dataset.query;
+      sendQuery();
     });
-  }
-
-  // Shift+Enter triggers AI search from the hero input
-  if (heroInput) {
-    heroInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && e.shiftKey) {
-        e.preventDefault();
-        const q = heroInput.value.trim();
-        if (q) doAISearch(q);
-      }
-    });
-  }
-
-  // Close inline results
-  document.getElementById('ai-results-close')?.addEventListener('click', () => {
-    document.getElementById('ai-results-section').style.display = 'none';
   });
 }

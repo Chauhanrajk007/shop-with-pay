@@ -1,4 +1,4 @@
-﻿// Compare Module â€” LuxCart
+// Compare Module â€” LuxCart
 import { showToast, formatPrice } from './ui.js';
 
 let compareList = [];

@@ -1,4 +1,4 @@
-﻿// Orders Module â€” LuxCart
+// Orders Module â€” LuxCart
 import { showToast, formatPrice } from './ui.js';
 import { getToken, isLoggedIn, openAuth } from './auth.js';
 

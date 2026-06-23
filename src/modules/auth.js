@@ -1,4 +1,4 @@
-﻿// Auth Module â€” LuxCart
+// Auth Module â€” LuxCart
 import { showToast } from './ui.js';
 
 let authMode = 'login';

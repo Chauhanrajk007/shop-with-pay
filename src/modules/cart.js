@@ -1,4 +1,4 @@
-﻿// Cart Module â€” LuxCart (with Razorpay checkout)
+// Cart Module â€” LuxCart (with Razorpay checkout)
 import { showToast, formatPrice } from './ui.js';
 import { getToken, isLoggedIn, openAuth } from './auth.js';
 

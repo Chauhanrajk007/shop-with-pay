@@ -1,4 +1,4 @@
-﻿// Product data for LuxCart â€” local fallback (main data comes from MongoDB)
+// Product data for LuxCart â€” local fallback (main data comes from MongoDB)
 export const collections = [
   {
     id: 'c1',

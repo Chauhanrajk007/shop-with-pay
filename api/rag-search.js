@@ -49,14 +49,26 @@ async function askGemini(query, candidates) {
       body: JSON.stringify({
         contents: [{
           parts: [{
-            text: `You are a shopping assistant for LuxCart (Indian e-commerce).
-User query: "${query}"
-Products: ${JSON.stringify(candidates.slice(0, 12).map(p => ({ name: p.name, description: p.description, category: p.category, brand: p.brand, price: p.price })))}
-Pick up to 6 best matches. For each add a "reason" field (1 sentence). Also write a "reasoning" summary.
-Return ONLY valid JSON: {"products": [...with reason...], "reasoning": "..."}`,
+            text: `You are the AI shopping assistant for LuxCart, a premium Indian e-commerce store. Your job is to deeply understand what the user ACTUALLY needs and recommend the best products.
+
+USER QUERY: "${query}"
+
+AVAILABLE PRODUCTS:
+${JSON.stringify(candidates.slice(0, 12).map(p => ({ name: p.name, description: p.description, category: p.category, brand: p.brand, price: p.price, rating: p.rating })), null, 1)}
+
+INSTRUCTIONS:
+1. UNDERSTAND INTENT: Figure out what the user really wants. If they say "something for gaming", they want gaming products. If they mention a budget like "under 10000" or "cheap", filter by price. If they say "best", prioritize by rating.
+2. PICK 3-6 BEST MATCHES from the list above. Only include products that genuinely match the query. If nothing matches well, return fewer products.
+3. For each product, write a short "reason" (1 sentence) explaining WHY this product fits what the user asked for. Be specific — mention the feature that matches their need.
+4. Write a "reasoning" field (2-3 sentences) that directly addresses the user's question like a helpful friend would. Mention price ranges, key differences, and your top pick.
+
+RESPOND WITH ONLY VALID JSON (no markdown, no backticks):
+{"products": [{"name": "exact product name from list", "reason": "why this fits"}], "reasoning": "friendly 2-3 sentence summary addressing the user's needs"}
+
+IMPORTANT: Use exact product names from the list. Prices are in INR (₹). Be conversational and helpful, not robotic.`,
           }],
         }],
-        generationConfig: { temperature: 0.2, maxOutputTokens: 1024 },
+        generationConfig: { temperature: 0.3, maxOutputTokens: 1500 },
       }),
     }
   )

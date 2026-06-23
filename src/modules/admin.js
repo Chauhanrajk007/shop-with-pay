@@ -1,4 +1,4 @@
-﻿// Admin Module â€” LuxCart
+// Admin Module â€” LuxCart
 import { showToast, formatPrice } from './ui.js';
 import { getToken, isLoggedIn, openAuth } from './auth.js';
 

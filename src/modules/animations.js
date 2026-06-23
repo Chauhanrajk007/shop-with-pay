@@ -1,4 +1,4 @@
-﻿// Animations Module â€” LuxCart
+// Animations Module â€” LuxCart
 
 export function initRevealAnimations() {
   const reveals = document.querySelectorAll('.reveal-up, .reveal-scale');
