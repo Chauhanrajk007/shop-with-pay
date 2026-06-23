@@ -1,4 +1,3 @@
-import { products } from './products.js';
 import { showToast, formatPrice } from './ui.js';
 
 let wishlist = JSON.parse(localStorage.getItem('luxcart_wishlist')) || [];
@@ -88,7 +87,7 @@ function renderWishlist() {
     return;
   }
 
-  const items = wishlist.map(id => products.find(p => p.id === id)).filter(Boolean);
+   const items = wishlist.map(id => window.allProducts?.find(p => String(p.id) === String(id))).filter(Boolean);
   
   body.innerHTML = items.map(p => `
     <div class="wishlist-item">
