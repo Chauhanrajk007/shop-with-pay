@@ -109,7 +109,7 @@ function initSearch() {
     });
   }
 
-  function doSearch(query) {
+  function doSearch(query, shouldScroll = false) {
     searchQuery = query.toLowerCase().trim();
     if (clearSearchBtn) {
       if (searchQuery) clearSearchBtn.style.display = 'inline-flex';
@@ -120,22 +120,27 @@ function initSearch() {
       else clearBtn.style.display = 'none';
     }
     renderProducts();
-    if (searchQuery) {
+    if (searchQuery && shouldScroll) {
       document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
   if (navInput) {
     navInput.addEventListener('input', (e) => {
-      // Basic local filtering as you type
-      doSearch(e.target.value);
+      // Only do live local filtering if AI mode is OFF
+      if (!isAIEnabled) {
+        doSearch(e.target.value, false);
+      } else {
+        // Just show the clear button if typing
+        if (clearBtn) clearBtn.style.display = e.target.value.trim() ? 'flex' : 'none';
+      }
     });
     navInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         if (isAIEnabled && window.doAISearch) {
           window.doAISearch(e.target.value);
         } else {
-          doSearch(e.target.value);
+          doSearch(e.target.value, true);
         }
       }
     });
@@ -145,7 +150,7 @@ function initSearch() {
       if (isAIEnabled && navInput && window.doAISearch) {
         window.doAISearch(navInput.value);
       } else if (navInput) {
-        doSearch(navInput.value);
+        doSearch(navInput.value, true);
       }
     });
   }
