@@ -166,6 +166,60 @@ function initSearch() {
       if (banner) banner.remove();
     });
   }
+
+  // ─── Mobile Search Bar (hero) ──────────────────────────────────────────────
+  const mobileInput = document.getElementById('mobile-search-input');
+  const mobileAiBtn = document.getElementById('mobile-ai-mode-btn');
+  const mobileSendBtn = document.getElementById('mobile-search-send-btn');
+
+  // Sync mobile AI toggle with the desktop toggle
+  if (mobileAiBtn) {
+    mobileAiBtn.addEventListener('click', () => {
+      isAIEnabled = !isAIEnabled;
+      // Update both buttons
+      [aiModeBtn, mobileAiBtn].forEach(btn => {
+        if (!btn) return;
+        if (isAIEnabled) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+      // Update placeholders
+      const placeholder = isAIEnabled ? "Search products or ask AI..." : "Search products...";
+      if (navInput) navInput.placeholder = placeholder;
+      if (mobileInput) mobileInput.placeholder = placeholder;
+      // Update send button icons
+      const icon = isAIEnabled
+        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="m22 2-11 11"/></svg>'
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>';
+      if (sendBtn) sendBtn.innerHTML = icon;
+      if (mobileSendBtn) mobileSendBtn.innerHTML = icon;
+    });
+  }
+
+  if (mobileInput) {
+    mobileInput.addEventListener('input', (e) => {
+      if (!isAIEnabled) {
+        doSearch(e.target.value, false);
+      }
+    });
+    mobileInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        if (isAIEnabled && window.doAISearch) {
+          window.doAISearch(e.target.value);
+        } else {
+          doSearch(e.target.value, true);
+        }
+      }
+    });
+  }
+  if (mobileSendBtn) {
+    mobileSendBtn.addEventListener('click', () => {
+      if (isAIEnabled && mobileInput && window.doAISearch) {
+        window.doAISearch(mobileInput.value);
+      } else if (mobileInput) {
+        doSearch(mobileInput.value, true);
+      }
+    });
+  }
 }
 
 // ─── Filters ──────────────────────────────────────────────────────────────────
